@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.26 5.28
-perl5.setup         Test-Simple 1.302162
+perl5.branches      5.26 5.28 5.30
+perl5.setup         Test-Simple 1.302171
 platforms           darwin
 maintainers         {devans @dbevans} openmaintainer
 license             {Artistic-1 GPL}
@@ -12,8 +12,8 @@ license             {Artistic-1 GPL}
 description         Test::Simple - Basic utilities for writing tests.
 long_description    ${description}
 
-checksums           rmd160  a40934d68820f86e1f5f18f6cefbd00202e0eb87 \
-                    sha256  73a0197c3d735e060881da509f4c5fa76c4cbf7dbabd4297d3cf5f5feed31fc4 \
-                    size    304819
+checksums           rmd160  389a2c11124d0eef2b2ddae5146d82e710468b0c \
+                    sha256  e27f90d2b2a6bc6ffa7675a072c2f41d5caffd99858dc69b2030940cc138368a \
+                    size    295354
 
 supported_archs     noarch

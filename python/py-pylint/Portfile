@@ -5,16 +5,16 @@ PortGroup           python 1.0
 PortGroup           select 1.0
 
 name                py-pylint
-version             2.3.1
+version             2.4.4
 revision            0
 categories-append   devel
 platforms           darwin
 license             GPL-2+
 supported_archs     noarch
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
-maintainers         {blair @blair} {stromnov @stromnov} openmaintainer
+maintainers         {stromnov @stromnov} openmaintainer
 
 description         Error (and style) checking for python
 
@@ -27,13 +27,10 @@ long_description    Pylint is a tool that checks for errors in python code, \
                     by pylint is close to `Guido's style guide`_.
 
 homepage            https://pylint.org
-master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
-distname            ${python.rootname}-${version}
-
-checksums           rmd160  917358dcdd31e8147c6ee4680ed46385767b11a2 \
-                    sha256  723e3db49555abaf9bf79dc474c6b9e2935ad82230b10c1138a71ea41ac0fff1 \
-                    size    577767
+checksums           rmd160  697ff5f5b2389de243f8ceff96db4b16eb71b63c \
+                    sha256  3db5468ad013380e987410a8d6956226963aed94ecb5f9d3a28acca6d9ac36cd \
+                    size    646113
 
 if {${name} ne ${subport}} {
     depends_build-append \

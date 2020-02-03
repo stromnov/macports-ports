@@ -4,7 +4,9 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           muniversal 1.0
 PortGroup           compilers 1.0
+PortGroup           xcodeversion 1.0
 PortGroup           compiler_blacklist_versions 1.0
+PortGroup           xcode_workaround 1.0
 
 name                OpenBLAS
 categories          math science
@@ -14,46 +16,83 @@ description         OpenBLAS is an optimized BLAS library based on GotoBLAS2
 long_description    ${description}
 platforms           darwin
 
-# Prevent precompiled binaries to let compilation optimise the library
-# for the user processor
-archive_sites
-
 # block compilers that do not support thread-local storage. it would
 # be better to use the cxx11 1.1 PG, but it conflicts with the
 # compilers 1.0 PG & so just block compilers instead.
 compiler.blacklist-append cc {*gcc-3*} {*gcc-4.[0-7]} {clang < 800.0.38}
+platform darwin i386 {
+    compiler.blacklist-append {macports-clang-[3-4].*}
+    compiler.fallback-append macports-clang-5.0 macports-clang-6.0 macports-clang-7.0
+}
+
+#Define target based on version of OS
+#OS 10.5 supports down to Intel Core Solo (Intel) or PowerPC G4
+if {${os.major} == 9} { 
+    if {${os.arch} eq "i386" || [variant_isset universal]} {
+        set blas_arch "YONAH"
+    } else {
+        set blas_arch "PPCG4"
+    }
+}
+#OS 10.6 supports down to Intel Core Solo architecture
+if {${os.major} == 10} { 
+    set blas_arch "YONAH"
+} 
+#OS 10.7-10.11 supports down to iMac 7,1, with Intel Core 2 Duo architecture
+#OS 10.12-13 supports down to iMac 10,1, with Intel Core 2 Duo architecture
+if {${os.major} >= 11 && ${os.major} <= 17} { 
+    set blas_arch "CORE2"
+}
+#OS 10.14 supports down to Mac Pro 5,1 that has Nehalem architecture
+if {${os.major} >= 18} { 
+    set blas_arch "NEHALEM"
+} 
+if {![info exists blas_arch]} {
+    #For older versions, we force native variant as there is no PPCG3 target in OpenBLAS
+    default_variants-append +native
+}
 
 subport OpenBLAS-devel {}
 if {[string first "-devel" $subport] > 0} {
 
-    github.setup    xianyi OpenBLAS f18ab6c17b262f617b5bbad87555bca3b490b079
-    version         20190309
-    checksums       rmd160 3c9f8f95685c46ff290764e3388d2d842535b049 \
-                    sha256 97e6b6baf99edb9ef637dc032b0a31de32fe4933240a0bc8fbe789d63edf0552 \
-                    size   11898036
+    github.setup    xianyi OpenBLAS b36018be6d39ca4ea23f997fbf41a57034b38bd3
+    version         20200109-[string range ${github.version} 0 7]
+    checksums       rmd160 c68bff2835ee25a3fbe5dd10e189c0f740b3c55c \
+                    sha256 33abd237fc3187b547b10c5b4681576aab9f7704c280992b061ded52a7eb2584 \
+                    size   12176286
     revision        0
 
     name            ${github.project}-devel
     conflicts       OpenBLAS
 
     patchfiles      patch-libnoarch.devel.diff \
-                    patch-linkLib.devel.diff
+                    patch-OpenBLAS-i386-Apple.diff \
+                    patch-revert-5f6206fa-c_check-only.diff
 
     github.livecheck.branch develop
 
+    #Not using precompiled binaries in -devel support
+    default_variants-append +native
+
 } else {
 
-    github.setup    xianyi OpenBLAS 0.3.5 v
-    checksums       rmd160  7089b502d723602c74bac7ff42bb4de7a7157696 \
-                    sha256  f4761d863a8738b2ebe4522dabaae1402d08dcba64ddfcca3c9ffbe02d795318 \
-                    size    11853101
-    revision        1
+    github.setup    xianyi OpenBLAS 0.3.7 v
+    checksums       rmd160 1e3698279f8d3084bfe9b34f22b33bfa56d8dbbf \
+                    sha256 c8943b3ce749c3f5c1eb5a72982178f5f6e383b54f09525983aa6b0ca2966d49 \
+                    size   11991860
+    revision        0
+
     conflicts       OpenBLAS-devel
 
     patchfiles      patch-libnoarch.release.diff \
-                    patch-linkLib.release.diff  \
-                    patch-darwin-powerpc.diff \
-                    patch-openblas-powermac970-fix.diff
+                    patch-OpenBLAS-i386-Apple.diff
+
+    if {![variant_isset native]} {
+        notes "
+        This version is built based on a base architecture for convenience, 
+        which may not be optimized for your system. To build a version 
+        customized for your machine, use the +native variant"
+    }
 }
 
 compilers.choose    fc
@@ -62,7 +101,18 @@ compilers.setup     default_fortran
 variant lapack description "Add Lapack/CLapack support to the library" { }
 default_variants-append +lapack
 
+variant native description "Force compilation on machine to get fully optimized library" {
+    # Prevent precompiled binaries to let compilation optimise the library for the user processor
+    archive_sites
+}
+
 use_configure       no
+
+# Workaround for test failure :-
+# > ./sblat2 < ./sblat2.dat
+# Program received signal SIGSEGV: Segmentation fault - invalid memory reference.
+xcode_workaround.fixed_xcode_version 11.2
+xcode_workaround.type append_to_compiler_name
 
 pre-build {
     if {[variant_isset universal]} {
@@ -85,6 +135,15 @@ pre-build {
 
             if {![variant_isset lapack]} {
                 puts $makeINC "NO_LAPACK = 1"
+            }
+
+            if {![variant_isset native]} { 
+                #We set a minimal target in case native variant is not set
+                if {${build_arch} eq "ppc" || ${build_arch} eq "ppc64"} {
+                    puts $makeINC "TARGET = PPCG4"
+                } else {
+                    puts $makeINC "TARGET = ${blas_arch}"
+                }
             }
 
             if {${build_arch} eq "ppc" || ${build_arch} eq "ppc64"} {
@@ -132,6 +191,12 @@ pre-build {
             puts $makeINC "NO_LAPACK = 1"
         }
 
+        if {![variant_isset native]} { 
+            #We set a minimal target in case native variant is not set
+            puts $makeINC "TARGET = ${blas_arch}"
+        }
+
+        #Setting up build flags
         if {${build_arch} eq "ppc" || ${build_arch} eq "ppc64"} {
             # on a PPC of some sort; just disable AVX
             puts $makeINC "NO_AVX = 1"
@@ -188,7 +253,7 @@ if {[variant_isset universal]} {
             system "install_name_tool -id \
                 ${prefix}/lib/libopenblas-r1.dylib \
                 ${destroot}-${arch}${prefix}/lib/libopenblas-r1.dylib"
-            delete file ${destroot}-${arch}/${prefix}/lib/cmake
+            delete file ${destroot}-${arch}${prefix}/lib/cmake
             if {[variant_isset lapack]} {
                 #Install lapacke headers too
                 set LAPACKE_DIR [exec /bin/ls ${worksrcpath}/lapack-netlib | \
@@ -213,7 +278,7 @@ if {[variant_isset universal]} {
         system "install_name_tool -id \
             ${prefix}/lib/libopenblas-r1.dylib \
             ${destroot}${prefix}/lib/libopenblas-r1.dylib"
-        delete file ${destroot}/${prefix}/lib/cmake
+        delete file ${destroot}${prefix}/lib/cmake
         if {[variant_isset lapack]} {
             #Install lapacke headers too
             set LAPACKE_DIR [exec /bin/ls ${worksrcpath}/lapack-netlib | \

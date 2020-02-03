@@ -2,24 +2,25 @@
 
 PortSystem          1.0
 PortGroup           muniversal 1.0
+PortGroup           xcode_workaround 1.0
 
 name                redis
-version             5.0.3
+version             5.0.7
 categories          databases
 platforms           darwin
 license             BSD
 
-maintainers         nomaintainer
+maintainers         {gmail.com:davidgilman1 @dgilman} openmaintainer
 
 description         Redis is an open source, advanced key-value store.
-long_description    ${description}
+long_description    {*}${description}
 
 homepage            https://redis.io/
 master_sites        http://download.redis.io/releases/
 
-checksums           rmd160  676d1db2d5e606047a8ed6a0ffdccbcea3aa89bc \
-                    sha256  e290b4ddf817b26254a74d5d564095b11f9cd20d8f165459efa53eb63cd93e02 \
-                    size    1959445
+checksums           rmd160  0490b980daaba10d5697af8b8b719c6ab54a821c \
+                    sha256  61db74eabf6801f057fd24b590232f2f337d422280fd19486eca03be87d3a82b \
+                    size    1984203
 
 patchfiles          patch-redis.conf.diff
 
@@ -29,12 +30,31 @@ post-patch {
 
 use_configure       no
 
+# see ${worksrcpath}/deps/jemalloc/Makefile
+compiler.cxx_standard   2014
+configure.cxx-append    -std=c++14
+
+# https://trac.macports.org/ticket/59245
+xcode_workaround.fixed_xcode_version 11.2
+xcode_workaround.type append_to_compiler_name
+
+if {[string match *clang* ${configure.cxx}]} {
+    configure.cxx-append -stdlib=${configure.cxx_stdlib}
+}
+
+if {${configure.sdkroot} ne ""} {
+    configure.cc-append     -isysroot${configure.sdkroot}
+    configure.cxx-append    -isysroot${configure.sdkroot}
+}
+
 if {![variant_isset universal]} {
     build.args-append \
-        CC="${configure.cc} [get_canonical_archflags cc]"
+        CC="${configure.cc} [get_canonical_archflags cc]" \
+        CXX="${configure.cxx} [get_canonical_archflags cxx]"
 } else {
     foreach arch ${configure.universal_archs} {
-        lappend merger_build_args(${arch}) CC='${configure.cc} -arch ${arch}'
+        lappend merger_build_args(${arch}) CC='${configure.cc} -arch ${arch}' \
+                                           CXX='${configure.cxx} -arch ${arch}'
     }
 }
 

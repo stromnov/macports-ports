@@ -1,31 +1,11 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           github 1.0
-PortGroup           meson 1.0
-
-github.setup        att ast d2c698b46ed15490ebce911580178f18e07f9bb6
-version             20190108
-revision            0
-checksums           rmd160  0b07d39af350586b9e3e812dd10c24bcbc71b8bb \
-                    sha256  ffb412cd871eddfecb0c1fe6b1ebe33de648eb8b6297830f8dba138c38303656 \
-                    size    2189194
+PortGroup           obsolete 1.0
 
 name                ksh93
-conflicts           pdksh
-categories          shells
-platforms           darwin freebsd
-maintainers         {ryandesign @ryandesign} openmaintainer
-license             CPL-1
+version             20191010
+revision            0
+replaced_by         ksh
 
-description         The AT&T Korn shell
-
-long_description    The official version of ksh-93, by David Korn and AT&T research
-
-depends_lib         port:libiconv
-
-patchfiles          compiler.patch
-
-post-patch {
-    reinplace "s|@CC@|${configure.cc}|g" ${worksrcpath}/scripts/libast_prereq.sh
-}
+# This obsolete port can be removed after November 2020.

@@ -1,0 +1,59 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-tensorflow_estimator
+version             2.1.0
+revision            0
+platforms           darwin
+supported_archs     noarch
+license             Apache-2
+maintainers         {blair @blair} {jonesc @cjones051073} openmaintainer
+
+description         High-level API that simplifies machine learning.
+long_description    TensorFlow Estimator is a high-level TensorFlow API \
+                    that greatly simplifies machine learning programming. \
+                    Estimators encapsulate training, evaluation, prediction, \
+                    and exporting for your model.
+
+homepage            https://github.com/tensorflow/estimator
+
+master_sites        https://files.pythonhosted.org/packages/18/90/b77c328a1304437ab1310b463e533fa7689f4bfc41549593056d812fab8e/
+
+distname            tensorflow_estimator-${version}-py2.py3-none-any
+
+checksums           rmd160  0800addd8cdd1f61b58da5546dbf17d3d5a85a99 \
+                    sha256  e5c5f648a636f18d1be4cf7ed46132b108a2f0f3fd9f1c850eba924263dc6972 \
+                    size    448979
+
+livecheck.url       https://pypi.org/project/tensorflow-estimator/
+livecheck.type      regex
+livecheck.regex     /project/tensorflow-estimator/(\\d+(\\.\\d+)+)/
+
+extract.suffix     .whl
+extract.only
+
+python.versions        37 38
+python.default_version 37
+
+if {${name} ne ${subport}} {
+    conflicts   py${python.version}-tensorflow_estimator1
+
+    depends_build-append \
+        port:py${python.version}-pip
+
+    build {
+    }
+
+    destroot.cmd        pip-${python.branch}
+    destroot.args       \
+        --ignore-installed \
+        --no-cache-dir \
+        --no-dependencies \
+        --root ${destroot} \
+        ${distpath}/${distfiles}
+    destroot.post_args
+
+    livecheck.type  none
+}

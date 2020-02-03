@@ -4,13 +4,13 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-rpy2
-version             2.9.5
+version             3.2.6
 revision            0
 categories-append   science
 platforms           darwin
 license             {MPL-1.1 LGPL-2.1+}
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -22,25 +22,36 @@ long_description    rpy2 is a redesign and rewrite of rpy. It is providing a \
                     structures and functions.
 
 homepage            http://rpy.sourceforge.net/rpy2.html
-master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
-distname            ${python.rootname}-${version}
-
-checksums           rmd160  f0e4711fc041320037837dbc03002c69c2364dcc \
-                    sha256  b91f8efca7d0929f2b2b3634946be892cba6c21f92acdf737399e7eedf4532db \
-                    size    194145
+checksums           rmd160  977d0d260d9de75223db40eac6066e0fb93c58b7 \
+                    sha256  1829c23fd9f6ac9dc8cf0ea14c1bc20a2a6e4a35c6f2c4726857dcd1310329dd \
+                    size    162905
 
 if {${name} ne ${subport}} {
-    if {${python.version} == 27} {
+    depends_lib-append  port:py${python.version}-cffi \
+                        port:py${python.version}-pytest \
+                        port:py${python.version}-jinja2 \
+                        port:py${python.version}-tz \
+                        port:py${python.version}-simplegeneric \
+                        port:py${python.version}-tzlocal
+
+    if {${python.version} eq 27} {
         version             2.8.6
         revision            0
 
         distname            ${python.rootname}-${version}
 
         checksums           rmd160  0ff07cd76a5b9d0b109651b785de9f5f276121d4 \
-                            sha256  004d13734a7b9a85cbc1e7a93ec87df741e28db1273ab5b0d9efaac04a9c5f98
+                            sha256  004d13734a7b9a85cbc1e7a93ec87df741e28db1273ab5b0d9efaac04a9c5f98 \
+                            size    191192
 
-        depends_lib-append  port:py${python.version}-singledispatch
+        depends_lib-append  port:py${python.version}-singledispatch \
+                            port:py${python.version}-six
+
+        depends_lib-delete  port:py${python.version}-cffi \
+                            port:py${python.version}-pytest \
+                            port:py${python.version}-jinja2 \
+                            port:py${python.version}-simplegeneric
     }
 
     depends_build-append \
@@ -49,8 +60,7 @@ if {${name} ne ${subport}} {
     # To continue using your custom R installation instead of MacPorts' R,
     # you have to remove this dependency line and make sure that your R
     # is in MacPorts' binpath, see your macports.conf for details.
-    depends_lib-append  port:R \
-                        port:py${python.version}-six
+    depends_lib-append  port:R
 
     livecheck.type      none
 }

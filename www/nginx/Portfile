@@ -3,7 +3,7 @@
 PortSystem          1.0
 
 name                nginx
-version             1.15.9
+version             1.17.8
 revision            0
 categories          www mail
 platforms           darwin
@@ -32,13 +32,14 @@ master_sites        https://nginx.org/download:nginx \
                     https://github.com/simpl/ngx_devel_kit/archive/:devel_kit_module \
                     https://github.com/openresty/lua-nginx-module/archive/:lua_module \
                     https://github.com/openresty/headers-more-nginx-module/archive/:h_more_module \
-                    https://github.com/TeslaGov/ngx-http-auth-jwt-module/archive/:jwt_module
+                    https://github.com/TeslaGov/ngx-http-auth-jwt-module/archive/:jwt_module \
+                    https://github.com/aperezdc/ngx-fancyindex/archive/:fancyindex_module
 
 distfiles           ${name}-${version}${extract.suffix}:nginx
 checksums           ${name}-${version}${extract.suffix} \
-                    rmd160  3991c3bf44c2a4723ca5d8f3f36e79be933d6d00 \
-                    sha256  e4cfba989bba614cd53f3f406ac6da9f05977d6b1296e5d20a299f10c2d7ae43 \
-                    size    1031760
+                    rmd160  4b98d571fe71b7e3ca32f37b30974f5cd83088ca \
+                    sha256  97d23ecf6d5150b30e284b40e8a6f7e3bb5be6b601e373a4d013768d5a25965b \
+                    size    1038627 \
 
 depends_lib         port:pcre \
                     port:zlib
@@ -121,7 +122,7 @@ notes "\
     Additionally, the files [join ${auto_activate_confs} ", "] have been copied to ${nginx_confdir} if they didn't exist yet.\n\
     Adjust these files to your needs before starting nginx."
 
-default_variants +mp4 +flv +secure_link +ssl +http2
+default_variants +mp4 +flv +secure_link +ssl +http2 +stream +fancyindex
 
 variant auth_request description {Add client authorization based on the result of a subrequest} {
     configure.args-append   --with-http_auth_request_module
@@ -137,13 +138,13 @@ variant dav description {Add WebDAV support to server} {
 
 variant davext description {Add WebDAV (extended) support to server} {
     set davext_filename     nginx-dav-ext-module
-    set davext_version      0.1.0
+    set davext_version      3.0.0
     set davext_distname     ${davext_filename}-${davext_version}
     distfiles-append        v${davext_version}.tar.gz:davext_module
     checksums-append        v${davext_version}.tar.gz \
-                            rmd160  78b7008e570fb4cb5d80a76011f88b5a1d34c529 \
-                            sha256  6b004eed8ea16ad8de4d304027bf0413cc323a95914e58625a7dc066481aae3a \
-                            size    6614
+                            rmd160  8d099215bde79492565a39c3c8feb7695138138e \
+                            sha256  d2499d94d82d4e4eac8425d799e52883131ae86a956524040ff2fd230ef9f859 \
+                            size    14558
 
     configure.args-append   --with-http_dav_module --add-module=${workpath}/${davext_distname}
 }
@@ -240,7 +241,8 @@ variant substitution description {Replace text in pages} {
 variant stream description {Enable ngx_stream_core_module for generic TCP proxying and load balancing (install with +ssl to enable ngx_stream_ssl_module)} {
     configure.args-append   --with-stream
     if {[variant_isset ssl]} {
-        configure.args-append   --with-stream_ssl_module
+        configure.args-append \
+            --with-stream_ssl_module --with-stream_ssl_preread_module
     }
 }
 
@@ -382,8 +384,8 @@ variant lua requires devel_kit description {Enable Lua module (https://github.co
                             sha256  ecea8c3d7f69dd48c6132498ddefb5d83ba9f387fa3d4da14e2abeacdfc8a3ee \
                             size    624102
 
-    configure.cflags        -I${prefix}/include/luajit-2.0/ ${configure.cflags}
-    configure.env           LUAJIT_INC=${prefix}/include/luajit-2.0/
+    configure.cflags        -I${prefix}/include/luajit-2.1/ ${configure.cflags}
+    configure.env           LUAJIT_INC=${prefix}/include/luajit-2.1/
     configure.env           LUAJIT_LIB=${prefix}/lib
     configure.args-append   --add-module=${workpath}/${ngx_lua_distname}
 
@@ -415,6 +417,19 @@ variant jwt description {Add JWT (Javascript Web Token) support to server using 
 
     configure.args-append   --add-dynamic-module=${workpath}/${jwt_distname}
     depends_lib-append      port:libjwt
+}
+
+variant fancyindex description {Add fancy index support; file listings, like the built-in autoindex module does, but with a touch of style} {
+    set fancyindex_filename        ngx-fancyindex
+    set fancyindex_version         0.4.3
+    set fancyindex_distname        ${fancyindex_filename}-${fancyindex_version}
+    distfiles-append        v${fancyindex_version}.tar.gz:fancyindex_module
+    checksums-append        v${fancyindex_version}.tar.gz \
+                            rmd160  fa7be114c57883e38869a16091ea64573db208aa \
+                            sha256  81698fb0c1ec9f906ce308c055d5d248085caf390f4b92516c1ec93f87c886d4 \
+                            size    25274
+
+    configure.args-append   --add-module=${workpath}/${fancyindex_distname}
 }
 
 

@@ -5,7 +5,7 @@ PortGroup           active_variants 1.1
 
 name                doxygen-launcher
 # should match doxygen version
-version             1.8.14
+version             1.8.17
 categories          aqua textproc devel
 platforms           darwin
 license             GPL-2
@@ -13,14 +13,13 @@ maintainers         {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
 description         Doxygen.app application bundle
 long_description    ${description}
 homepage            http://www.doxygen.org/
-master_sites        http://ftp.stack.nl/pub/users/dimitri/ \
-                    ftp://ftp.stack.nl/pub/users/dimitri/
+master_sites        http://doxygen.nl/files/
 
 distfiles           Doxygen-${version}.dmg
 
-checksums           rmd160  e3abe34c3b20ca595d43434520ff5c00032393b5 \
-                    sha256  6df23153620cfce5d05362ca47be967de9af1b3b27c0de812cd936eb680d8559 \
-                    size    120299622
+checksums           rmd160  8545774ae2abc19ef098c25b7cebb99bdba49f05 \
+                    sha256  bf051b2c26ad5569efe9ca09396199340d03c6c96d61b730d50d5cd8f547425b \
+                    size    132101567
 
 use_configure       no
 supported_archs     noarch

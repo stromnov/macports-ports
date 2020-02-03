@@ -28,12 +28,15 @@ if {${os.platform} eq "darwin" && ${os.major} == 10} {
     version         3.1.2-20151024
     checksums       rmd160 1c07a75a88f272653ca246aa1212a208a83ecb30 \
                     sha256 ff4745264f92b740c50ecc90370f102c86c439f2b6108f1495bd60c87e5d6a83
+    revision        0
 
     # bump the epoch because I moved the version from 20151012 to 3.1.2
 
     epoch           1
 
-    long_description ${description}. This version of GLFW is the latest to provide support for Mac OS X 10.6 and prior, and it will not be updated. It is provided in the hope that it allows ports depending on GLFW to build on these older Mac OS X installs.
+    long_description ${description}. This version of GLFW is the latest to provide support for \
+        Mac OS X 10.6 and prior, and it will not be updated. It is provided in the \
+        hope that it allows ports depending on GLFW to build on these older Mac OS X installs.
 
     # patch to fix install directory for cmake files and docs
 
@@ -43,16 +46,36 @@ if {${os.platform} eq "darwin" && ${os.major} == 10} {
 
     # Mac OS X 10.7 and newer: release and devel
 
+    # requires c11 support as of 82ca58da (20190305) for
+    # <stdatomic.h>; 3.3 was released shortly after this change, so
+    # this requirement is now for all modern GLFW. hopefully the
+    # following force a C11 compliant compiler to be used! require GCC
+    # >= 4.6 (4.9 for full C11) or MacPorts' Clang >= 3.1 or
+    # AppleClang >= 700. MacPorts' Clang starts at 3.3, so nothing to
+    # block there!
+
+    PortGroup cxx11                       1.1
+    PortGroup compiler_blacklist_versions 1.0
+
+    compiler.blacklist-append macports-gcc-4.3 macports-gcc-4.4 macports-gcc-4.5 \
+        macports-gcc macports-gcc-4.6 macports-gcc-4.7 macports-gcc-4.8 \
+        macports-llvm-gcc-4.2 macports-dragonegg-3.3 macports-dragonegg-3.4 \
+        apple-gcc-4.0 apple-gcc-4.2 gcc-3.3 gcc-4.0 llvm-gcc-4.2 gcc cc \
+        {clang < 700} macports-clang-3.*
+
+    configure.args-append -DCMAKE_C_STANDARD=11 -DCMAKE_C_EXTENSIONS=OFF
+
     subport glfw-devel {}
 
     if {${subport} eq ${name}} {
 
         # release
 
-        github.setup    glfw glfw 3.2.1
-        checksums       rmd160 5fb5988736a0a2812426907ab8d64b94eeacc010 \
-                        sha256 34bc25f8111501eec35a52fd39fa50336a0c2e812d4a14454c7c946458ab015c
-        revision        0
+        github.setup glfw glfw 3.3.2
+        checksums rmd160 33cf93d62c22862144bcfd25894a165d970d7206 \
+                  sha256 ae736d73367b7f38a714ce4ee22cc2afa6749464d3ed7d3544848715aaea03a2 \
+                  size   760096
+        revision  0
 
         # bump the epoch because I moved the version from 20151012 to 3.1.2
 
@@ -74,12 +97,12 @@ if {${os.platform} eq "darwin" && ${os.major} == 10} {
 
         # devel
 
-        github.setup glfw glfw 8055dad7e4d93069a72fdb8abecc131b3c3e5040
-        version      20190305
-        checksums    rmd160 612325fa261febed8fdbf95fd260122be608d758 \
-                     sha256 ab79a3992d8b62915e70e914a08ba4d7d727e24fa07a5a673546f04d6881080c \
-                     size   771885
-        revision     0
+        github.setup glfw glfw d973acc123826666ecc9e6fd475682e3d84c54a6
+        version   20200119-[string range ${github.version} 0 7]
+        checksums rmd160 870e45af8a36e47145e2e96154c5c45b66ff80c6 \
+                  sha256 8fb835b54446a4b1bbf9e43bdadaa41874bec35d2d7968b4298d6db93aac5819 \
+                  size   753926
+        revision  0
 
         conflicts       glfw
         long_description ${description}: \

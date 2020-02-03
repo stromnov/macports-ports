@@ -18,11 +18,7 @@
 options crossgcc.target \
         crossgcc.languages
 
-if {[vercmp [macports_version] 2.5.3] <= 0} {
-    default crossgcc.languages {"c c++"}
-} else {
-    default crossgcc.languages "c c++"
-}
+default crossgcc.languages "c c++"
 
 array set crossgcc.versions_info {
     7.1.0 {bzip2 {
@@ -60,13 +56,33 @@ array set crossgcc.versions_info {
         sha256  64baadfe6cc0f4947a84cb12d7f0dfaf45bb58b7e92461639596c21e02d97d2c \
         size    63694700
     }}
+    9.1.0 {xz {
+        rmd160  b9dd53082905c4ca2f7f8291af1e4d015bc97d39 \
+        sha256  79a66834e96a6050d8fe78db2c3b32fb285b230b855d0a66288235bc04b327a0 \
+        size    70546856
+    }}
+    9.2.0 {xz {
+        rmd160  a51d7f812f45980c517c4505e04a217cf319a992 \
+        sha256  ea6ef08f121239da5695f76c9b33637a118dcf63e24164422231917fa61fb206 \
+        size    70607648
+    }}
 }
 
 array set newlib.versions_info {
+    2.4.0 {gz {
+        rmd160  e7a98a00aca89aad0ee2e2b98993fd8e643d98ce \
+        sha256  545b3d235e350d2c61491df8b9f775b1b972f191380db8f52ec0b1c829c52706 \
+        size    17574364
+    }}
     3.0.0 {gz {
         rmd160  505d486c9c658d10ed3b1af13459b2f289680b1f \
         sha256  c8566335ee74e5fcaeb8595b4ebd0400c4b043d6acb3263ecb1314f8f5501332 \
         size    18168046
+    }}
+    3.1.0 {gz {
+        rmd160  bf4f474ef482a8ba0b2d57254051d79c48c5a633 \
+        sha256  fb4fa1cc21e9060719208300a61420e4089d6de6ef59cf533b57fe74801d102a \
+        size    17958952
     }}
 }
 
@@ -221,6 +237,9 @@ proc crossgcc.setup {target version} {
         if {[vercmp ${xcodeversion} 4.3] < 0} {
             compiler.blacklist llvm-gcc-4.2
         }
+        # Failed to build with clang from Xcode 4.5
+        # fatal error: error in backend: ran out of registers during register allocation
+        compiler.blacklist  {clang >= 421 < 422}
 
         universal_variant no
 
@@ -274,9 +293,10 @@ proc crossgcc.setup_libc {libc_name libc_version} {
                 post-extract {
                     system -W ${workpath} "tar -xf ${distpath}/${dnewlib}"
                     ln -s ${workpath}/newlib-${crossgcc.libc_version}/newlib ${workpath}/gcc-${version}/
+                    ln -s ${workpath}/newlib-${crossgcc.libc_version}/libgloss ${workpath}/gcc-${version}/
                 }
 
-                configure.args-append --with-newlib
+                configure.args-append --with-newlib --with-libgloss
             }
         }
         default {

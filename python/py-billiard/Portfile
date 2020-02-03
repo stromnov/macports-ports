@@ -4,14 +4,13 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-billiard
-version             3.5.0.5
+version             3.6.2.0
 revision            0
 categories-append   devel
 platforms           darwin
 license             BSD
-supported_archs     noarch
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -19,13 +18,10 @@ description         Python multiprocessing fork.
 long_description    ${description}
 
 homepage            https://github.com/celery/billiard
-master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
-distname            ${python.rootname}-${version}
-
-checksums           rmd160  cbe2b4fa6ccb55dd1160271e4fd44f4ef189b76e \
-                    sha256  42d9a227401ac4fba892918bba0a0c409def5435c4b483267ebfe821afaaba0e \
-                    size    150031
+checksums           rmd160  c8da9135308996455308dd2329a8dda9712510e3 \
+                    sha256  f4e09366653aa3cb3ae8ed16423f9ba1665ff426f087bcdbbed86bf3664fe02c \
+                    size    152489
 
 if {${name} ne ${subport}} {
     depends_build-append \

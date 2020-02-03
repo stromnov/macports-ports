@@ -4,22 +4,22 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-python-jsonrpc-server
-version             0.1.2
+version             0.3.4
 revision            0
+
 platforms           darwin
+supported_archs     noarch
 license             MIT
-maintainers         {gmail.com:ottenr.work @reneeotten} openmaintainer
+maintainers         {reneeotten @reneeotten} openmaintainer
 
 description         JSON RPC 2.0 server library
 long_description    ${description}
 
 homepage            https://github.com/palantir/python-jsonrpc-server
-master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
-distname            ${python.rootname}-${version}
 
-checksums           rmd160  3c29535bc63fa7c71c70c391ef523175d177b7aa \
-                    sha256  09b418e3b1ba9032aecc7aefdd185511dd230fb8dacf18ec195d14dfd89d9e54 \
-                    size    25541
+checksums           rmd160  900bb755841932f6105be186d652aa82c6a7f54f \
+                    sha256  c73bf5495c9dd4d2f902755bedeb6da5afe778e0beee82f0e195c4655352fe37 \
+                    size    26123
 
 python.versions     27 35 36 37
 
@@ -27,9 +27,11 @@ if {${name} ne ${subport}} {
     depends_build-append \
                         port:py${python.version}-setuptools
 
-    depends_lib-append  port:py${python.version}-future
+    depends_lib-append  port:py${python.version}-ujson
+
     if {${python.version} eq 27} {
         depends_lib-append \
+                        port:py${python.version}-future \
                         port:py${python.version}-futures
     }
 
@@ -38,8 +40,16 @@ if {${name} ne ${subport}} {
 
     test.run            yes
     test.cmd            py.test-${python.branch}
+    test.args           -o addopts=''
     test.target
     test.env            PYTHONPATH=${worksrcpath}/build/lib
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} README.rst \
+            LICENSE ${destroot}${docdir}
+    }
 
     livecheck.type      none
 }

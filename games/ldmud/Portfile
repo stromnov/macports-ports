@@ -1,7 +1,8 @@
 PortSystem 1.0
 PortGroup github 1.0
 
-github.setup    ldmud ldmud 3.5.1
+github.setup    ldmud ldmud 3.6.0
+revision        1
 categories      games
 maintainers     {toby @tobypeterson}
 description     modern LPMud gamedriver
@@ -16,14 +17,14 @@ long_description \
 homepage        http://www.ldmud.eu/
 platforms       darwin
 
-checksums       rmd160 496e8104d1a1de9d593c752c9bd29b36fb6aa4dc \
-                sha256 18aa1938b5e3c27bfe7d7344506d20bab1df22fcc9a9c107c9b8e97ca5f8e5f3 \
-                size   2721144
+checksums       rmd160 0724adc940d020bc1fd937cf961f14acdd1074dd \
+                sha256 c5adae65da6c2f0d53939961615d48381d6ef8d9a28814f3c9c7de3991afa5c5 \
+                size   2754680
 
 patchfiles      patch-src__Makefile.in
 
 depends_build   port:bison
-depends_lib     port:libiconv port:pcre
+depends_lib     port:libiconv port:pcre path:lib/libssl.dylib:openssl
 
 use_autoreconf  yes
 autoreconf.dir  ${worksrcpath}/src
@@ -31,7 +32,8 @@ autoreconf.cmd  ./autogen.sh
 
 configure.dir   ${worksrcpath}/src
 configure.args  --libdir=${prefix}/var/ldmud \
-                --with-optimize=no
+                --with-optimize=no \
+                --enable-use-tls=ssl
 configure.env   EXTRA_CFLAGS=${configure.cflags}
 
 use_parallel_build  no

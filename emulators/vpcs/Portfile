@@ -45,11 +45,11 @@ platform darwin powerpc {
 }
 
 build.cmd           ./mk.sh
-build.env           CXX="${configure.cxx}" \
-                    CXXFLAGS="${configure.cxxflags} [get_canonical_archflags cxx]" \
-                    CC="${configure.cc}" \
-                    CFLAGS="${configure.cflags} [get_canonical_archflags cc]" \
-                    LDFLAGS="${configure.ldflags}  [get_canonical_archflags ld]" \
+build.env           CXX=${configure.cxx} \
+                    "CXXFLAGS=${configure.cxxflags} [get_canonical_archflags cxx]" \
+                    CC=${configure.cc} \
+                    "CFLAGS=${configure.cflags} [get_canonical_archflags cc]" \
+                    "LDFLAGS=${configure.ldflags} [get_canonical_archflags ld]" \
                     PREFIX=${prefix}
 
 destroot {

@@ -4,8 +4,8 @@ PortSystem          1.0
 PortGroup           active_variants 1.1
 
 name                xcircuit-devel
-version             3.10.12
-revision            1
+version             3.10.14
+revision            0
 set branch          [join [lrange [split ${version} .] 0 1] .]
 categories          x11 cad
 platforms           darwin
@@ -32,9 +32,9 @@ dist_subdir         xcircuit
 distname            xcircuit-${version}
 extract.suffix      .tgz
 
-checksums           rmd160  c211aa1b63ae78a94c40e7e42bba83cba3c56e77 \
-                    sha256  92ea6366fdb58b669b62abc0c5f5662658bbaf80de01b4344b24d1eeeea0a610 \
-                    size    1615276
+checksums           rmd160  6f4f996cc14023d1532baa597350212fd29f3bc9 \
+                    sha256  d786db26055d09748148510b0a81b56af256c2f23dced764ed9e24ef0369cf74 \
+                    size    1615558
 
 depends_build       port:autoconf \
                     port:automake \

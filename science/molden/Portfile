@@ -14,10 +14,11 @@ name                molden
 # as well as checksums should be updated each time this happens.
 # See https://trac.macports.org/wiki/PortfileRecipes#stealth-updates
 epoch               1
-version             5.9.2-20181220132400
-checksums           rmd160  7a03b349380828b1beb38c11a2cbb7f4aeb65fa2 \
-                    sha256  358a3271b4b71fa72d7efef58c007986a5149e4c32cd23b9e66f8b3bf6e55e24 \
-                    size    5815326
+version             6.2-20190813131500
+revision            0
+checksums           rmd160  332caa224def7be284736bf09707f1ce5c326422 \
+                    sha256  b6e074dfae52b0b8ade2c44e93f9646dd3bfc2d5a064b5cf892efc5bf6b9a506 \
+                    size    6270948
 
 set version_number  [lindex [split ${version} -] 0]
 set branch          [join [lrange [split ${version_number} .] 0 1] .]

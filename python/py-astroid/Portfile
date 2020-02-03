@@ -4,14 +4,14 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-astroid
-version             2.2.3
+version             2.3.3
 revision            0
 categories-append   devel
 platforms           darwin
 license             LGPL-2.1+
 supported_archs     noarch
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -24,13 +24,10 @@ long_description    The aim of this module is to provide a common \
                     essentially governed by pylint's needs.
 
 homepage            https://github.com/pycqa/astroid
-master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
-distname            ${python.rootname}-${version}
-
-checksums           rmd160  f2c0b6bec675210dd5c0bcb713a21d527e2b69df \
-                    sha256  91f52b4e4645ee610a82841aacc7ecd0202f695375cc7b34bae43ab4ab359099 \
-                    size    281317
+checksums           rmd160  180dfda90675ead4026b7cd2f47f2ba2ecb7aee9 \
+                    sha256  71ea07f44df9568a75d0f354c49143a4575d90645e9fead6dfb52c26a85ed13a \
+                    size    297350
 
 if {${name} ne ${subport}} {
     depends_build-append \
@@ -42,33 +39,27 @@ if {${name} ne ${subport}} {
                         port:py${python.version}-typed-ast \
                         port:py${python.version}-wrapt
 
-    if {${python.version} eq 34} {
-        depends_lib-append \
-                        port:py${python.version}-typing
-    }
-
     if {${python.version} eq 27} {
-        version         1.6.5
-        revision        0
-        distname        ${python.rootname}-${version}
-        checksums       rmd160  bba1d1e3582e557ecbe6a56ca83adef5b1d80506 \
-                        sha256  fc9b582dba0366e63540982c3944a9230cbc6f303641c51483fa547dcc22393a \
-                        size    255688
+        version             1.6.5
+        revision            0
+        distname            ${python.rootname}-${version}
+        checksums           rmd160  bba1d1e3582e557ecbe6a56ca83adef5b1d80506 \
+                            sha256  fc9b582dba0366e63540982c3944a9230cbc6f303641c51483fa547dcc22393a \
+                            size    255688
 
-        depends_lib-append \
-                        port:py${python.version}-enum34 \
-                        port:py${python.version}-singledispatch \
-                        port:py${python.version}-backports-functools_lru_cache
+        depends_lib-append  port:py${python.version}-enum34 \
+                            port:py${python.version}-singledispatch \
+                            port:py${python.version}-backports-functools_lru_cache
 
         depends_build-delete \
-                        port:py${python.version}-pytest-runner
+                            port:py${python.version}-pytest-runner
 
-        depends_lib-delete \
-                        port:py${python.version}-typed-ast
+        depends_lib-delete  port:py${python.version}-typed-ast
     }
 
     depends_test-append \
                         port:py${python.version}-pytest
+
     test.run            yes
     test.cmd            py.test-${python.branch}
     test.target

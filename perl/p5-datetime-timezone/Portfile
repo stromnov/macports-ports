@@ -4,9 +4,8 @@ PortSystem          1.0
 PortGroup           perl5 1.0
 
 epoch               5
-perl5.branches      5.26 5.28
-perl5.setup         DateTime-TimeZone 2.23 ../../authors/id/D/DR/DROLSKY
-revision            1
+perl5.branches      5.26 5.28 5.30
+perl5.setup         DateTime-TimeZone 2.38 ../../authors/id/D/DR/DROLSKY
 maintainers         nomaintainer
 license             {Artistic-1 GPL}
 supported_archs     noarch
@@ -19,9 +18,9 @@ long_description    This class is the base class for all time zone \
 
 platforms           darwin
 
-checksums           rmd160  0e69b8f70007cd79e5fb2e93f32895300fb96e6c \
-                    sha256  6ae40286031853a4319c5b34516f1c09e429d5caa5f782165cc27175c89fe54f \
-                    size    965468
+checksums           rmd160  53eab8589f40d2006c2f7e388e73cced92a3716a \
+                    sha256  0e5c99ef22471f4d262ac590ce5ce8177094d7a92f380d8eea6219f5a12dc0cd \
+                    size    992581
 
 if {${perl5.major} != ""} {
     depends_build-append \

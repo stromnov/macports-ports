@@ -4,13 +4,13 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-geopandas
-version             0.4.1
+version             0.6.2
 revision            0
 categories-append   science
 license             BSD
 platforms           darwin
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -24,9 +24,9 @@ master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
 distname            geopandas-${version}
 
-checksums           rmd160  155fc70c59705f47dcc62e4de78c4962f1d50168 \
-                    sha256  a59345c7ee9c4532101342bf31f5c576c32f901f16a5aaf0637c7e1f5ac8939c \
-                    size    905397
+checksums           rmd160  c949b67d191f3724bc0154aaba516065d86e5d6b \
+                    sha256  692ff115c91937f43cad65bc5bba012059f8d968943ba85ba314a734bb727bc4 \
+                    size    920275
 
 if {${name} ne ${subport}} {
     depends_build-append \
@@ -38,6 +38,15 @@ if {${name} ne ${subport}} {
                         port:py${python.version}-fiona \
                         port:py${python.version}-pyproj \
                         port:py${python.version}-six
+
+    if {${python.version} eq 27} {
+        version             0.5.1
+        revision            0
+        distname            ${python.rootname}-${version}
+        checksums           rmd160  7bfd35e7f23520025b9e354b56ce7c801c680ab0 \
+                            sha256  f0c99a5055bef99a31f63480bef0048f164dbadc5a9af081fe25c1c5c2dc7a87 \
+                            size    897236
+    }
 
     livecheck.type      none
 }

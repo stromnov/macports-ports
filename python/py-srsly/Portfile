@@ -1,0 +1,46 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                           1.0
+PortGroup           python           1.0
+PortGroup           github           1.0
+
+name                py-srsly
+version             2.0.0
+revision            0
+github.setup        explosion srsly ${version} v
+
+checksums           rmd160  f22e1b633ede0198f0b9d87964621a61731b81a1 \
+                    sha256  d93ca1c95529e72eeec393516659e373c5a38b6e344707e3e3480fc68cfb6298 \
+                    size    240660
+
+platforms           darwin
+supported_archs     x86_64
+
+license             MIT
+
+maintainers         {jonesc @cjones051073} openmaintainer
+
+description         Modern high-performance serialization utilities for Python
+long_description    ${description}
+
+# Supported python versions
+python.versions     36 37 38
+
+if {${name} ne ${subport}} {
+
+    depends_build-append \
+        port:py${python.version}-setuptools \
+        port:py${python.version}-wheel 
+
+    depends_lib-append \
+        port:py${python.version}-cython \
+        port:py${python.version}-numpy 
+
+    depends_test-append \
+        port:py${python.version}-pytest \
+        port:py${python.version}-mock \
+        port:py${python.version}-tz
+
+    livecheck.type none 
+
+}

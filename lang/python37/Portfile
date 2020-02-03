@@ -2,11 +2,12 @@
 
 PortSystem 1.0
 PortGroup select 1.0
+PortGroup clang_dependency 1.0
 
 name                python37
 
 # Remember to keep py37-tkinter and py37-gdbm's versions sync'd with this
-version             3.7.2
+version             3.7.6
 
 set major           [lindex [split $version .] 0]
 set branch          [join [lrange [split ${version} .] 0 1] .]
@@ -24,16 +25,17 @@ master_sites        ${homepage}ftp/python/${version}/
 
 distname            Python-${version}
 use_xz              yes
-checksums           md5 df6ec36011808205beda239c72f947cb \
-                    rmd160 4117feee6360078efea9a09c154b753570154445 \
-                    sha256 d83fe8ce51b1bb48bbcf0550fd265b9a75cdfdfa93f916f9e700aef8444bf1bb
+checksums           md5 c08fbee72ad5c2c95b0f4e44bf6fd72c \
+                    rmd160 3b3f651d53f55c00c9fea579d901a9eff3d26905 \
+                    sha256 55a2cce72049f0794e9a11a84862e9039af9183603b78bc60d89539f82cf533f
 
 patchfiles          patch-setup.py.diff \
                     patch-Lib-cgi.py.diff \
                     patch-configure.diff \
                     patch-Lib-ctypes-macholib-dyld.py.diff \
                     patch-libedit.diff \
-                    patch-configure-xcode4bug.diff
+                    patch-configure-xcode4bug.diff \
+                    patch-_osx_support.py.diff
 
 depends_build       port:pkgconfig
 depends_lib         port:bzip2 \
@@ -50,7 +52,7 @@ depends_run         port:python_select \
                     port:python3_select
 
 # blacklist llvm-gcc-4.2 compiler known to produce bad code
-compiler.blacklist  *llvm-gcc-4.2
+compiler.blacklist-append *llvm-gcc-4.2
 
 # ensurepip arg may be removed later, now conflicts with pip and setuptools
 # packages
@@ -93,8 +95,11 @@ platform darwin {
     set confdir     config-${branch}m-darwin
 
     post-configure {
+        # poll() misbehaves on 10.8 and older
         # See https://trac.macports.org/ticket/18376
-        system -W ${worksrcpath} "ed - pyconfig.h < ${filespath}/pyconfig.ed"
+        if {${os.major} <= 12} {
+            system -W ${worksrcpath} "ed - pyconfig.h < ${filespath}/pyconfig.ed"
+        }
     }
 
     post-build {
@@ -197,4 +202,4 @@ variant optimizations description {Compile with LTO and PGO. Build time greatly 
 
 livecheck.type      regex
 livecheck.url       ${homepage}downloads/source/
-livecheck.regex     Python (${branch}\[.0-9\]+)
+livecheck.regex     Python (${branch}\[.0-9\]+) -

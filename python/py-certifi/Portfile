@@ -4,14 +4,15 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-certifi
-version             2019.03.09
+version             2019.11.28
+set distversion     [regsub -all {(\.)0} ${version} {\1}]
 revision            0
 categories-append   devel net
 platforms           darwin
 license             {MPL-1.1 GPL-2+ LGPL-2.1+}
 supported_archs     noarch
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -21,12 +22,14 @@ long_description    ${description}
 homepage            https://pypi.python.org/pypi/certifi
 master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
-distname            ${python.rootname}-2019.3.9
+distname            ${python.rootname}-${distversion}
 
-checksums           rmd160  667a2e8d032455eb63e5a0f2cc7ef798bc5e925e \
-                    sha256  b26104d6835d1f5e49452a26eb2ff87fe7090b89dfcaee5ea2212697e1e1d7ae \
-                    size    158179
+checksums           rmd160  886eb3cbd44f4cd8bb842912fa7beccc0223d4bc \
+                    sha256  25b64c7da4cd7479594d035c08c2d809eb4aab3a26e5a990ea98cc450c320f1f \
+                    size    156407
 
 if {${name} ne ${subport}} {
     livecheck.type      none
+} else {
+    livecheck.version   ${distversion}
 }

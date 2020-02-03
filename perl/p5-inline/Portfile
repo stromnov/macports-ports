@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.26 5.28
-perl5.setup         Inline 0.81
+perl5.branches      5.26 5.28 5.30
+perl5.setup         Inline 0.86
 license             {Artistic-1 GPL}
 maintainers         nomaintainer
 description         Write Perl subroutines in other programming languages
@@ -15,9 +15,9 @@ long_description    Inline lets you write Perl subroutines in other programming 
 
 platforms           darwin
 
-checksums           rmd160  bf36ed7d07ca85a293642251ae4efd74ba3fa6cf \
-                    sha256  1f973868dcca56a3a99b25d253fa18bf2d53670f8bbfa498261267647707b1e3 \
-                    size    77821
+checksums           rmd160  bc1cdeee73ca169b6b250c770a558a5b50506b01 \
+                    sha256  510a7de2d011b0db80b0874e8c0f7390010991000ae135cff7474df1e6d51e3a \
+                    size    87329
 
 if {${perl5.major} != ""} {
     depends_build-append \

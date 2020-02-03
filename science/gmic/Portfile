@@ -5,7 +5,7 @@ PortGroup           cxx11 1.1
 PortGroup           qt5 1.0
 
 name                gmic
-version             2.4.5
+version             2.8.3
 revision            0
 license             CeCILL
 categories          science
@@ -31,9 +31,9 @@ use_parallel_build  no
 
 distfiles           ${name}_${version}${extract.suffix}
 
-checksums           rmd160  baa2fc90baf3ec5bd919c238f90824f4d27b65b1 \
-                    sha256  e87efa20abdedf5e0000c490669d76c8a8d16a9fafa27bc9e31b79b5cbc3277f \
-                    size    3819428
+checksums           rmd160  1e2c9a8144792312bb647963eed7e577413e572a \
+                    sha256  573a4f7731ba506a397c8080e60ad30bd3d4b686c51ec3d22d7f5de9a901547c \
+                    size    6172645
 
 depends_lib         port:curl \
                     path:lib/libavcodec.dylib:ffmpeg \
@@ -76,6 +76,12 @@ variant universal   {}
 build.dir           ${worksrcpath}/src
 build.args-append   CC=${configure.cc} \
                     CXX=${configure.cxx}
+
+#see https://trac.macports.org/ticket/59677
+#see https://trac.macports.org/ticket/58779
+if { !${use_xcode} && ![file exists ${configure.developer_dir}/SDKs] } {
+    use_xcode yes
+}
 
 livecheck.url       http://gmic.eu/files/source/
 livecheck.regex     ${name}_(\[0-9.\]+)${extract.suffix}

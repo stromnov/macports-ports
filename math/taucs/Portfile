@@ -58,15 +58,15 @@ configure.post_args-append \
                         " && printenv >> config/${os.platform}.mk"
 
 configure.env-append    PREFIX=${prefix} \
-                        LIBMETIS="-lmetis" \
-                        LIBF77="-lf2c" \
-                        LIBC="" \
+                        LIBMETIS=-lmetis \
+                        LIBF77=-lf2c \
+                        LIBC= \
                         OSTYPE=${os.platform}
 
 pre-configure {
     configure.env-append \
-                        LIBBLAS="${linalglib}" \
-                        LIBLAPACK=""
+                        LIBBLAS=${linalglib} \
+                        LIBLAPACK=
 }
 
 if {${build_arch} eq "ppc" || ${build_arch} eq "ppc64"} {

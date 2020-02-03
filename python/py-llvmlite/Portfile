@@ -4,14 +4,14 @@ PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           github 1.0
 
-github.setup        numba llvmlite 0.27.1 v
+github.setup        numba llvmlite 0.31.0 v
 name                py-llvmlite
 revision            0
 categories-append   devel science
 platforms           darwin
 license             BSD
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -20,22 +20,22 @@ long_description    ${description}
 
 homepage            http://llvmlite.pydata.org/
 
-checksums           rmd160  7b2584b4f13c9bf0115597bbe482490f515596ab \
-                    sha256  913b829cf4d1fd1ea466a8fde9ee5987fb7394385c38e33baa9bc474305f6ca8 \
-                    size    186949
+checksums           rmd160  72cbabced6a93db7232a6a6d652e56993887f5d3 \
+                    sha256  fe4b36661f050565e73e07d0c31ee47bd2b44602e0bf17d4a19d3d7d0d2c60f4 \
+                    size    199646
 
 if {${name} ne ${subport}} {
     patchfiles-append   patch-ffi_Makefile.osx.diff
 
     post-patch {
-        reinplace "s|%%CXX%%|clang++-mp-7.0|" ${worksrcpath}/ffi/Makefile.osx
+        reinplace "s|%%CXX%%|clang++-mp-8.0|" ${worksrcpath}/ffi/Makefile.osx
     }
 
     depends_build-append \
                         port:py${python.version}-setuptools \
-                        port:clang-7.0
+                        port:clang-8.0
 
-    depends_lib-append  port:llvm-7.0 \
+    depends_lib-append  port:llvm-8.0 \
                         port:zlib \
                         port:ncurses \
                         port:libxml2
@@ -44,8 +44,8 @@ if {${name} ne ${subport}} {
         depends_lib-append  port:py${python.version}-enum34
     }
 
-    build.env-append    LLVM_CONFIG=llvm-config-mp-7.0
-    destroot.env-append LLVM_CONFIG=llvm-config-mp-7.0
+    build.env-append    LLVM_CONFIG=llvm-config-mp-8.0
+    destroot.env-append LLVM_CONFIG=llvm-config-mp-8.0
 
     livecheck.type      none
 } else {

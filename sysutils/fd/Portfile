@@ -7,7 +7,7 @@ PortGroup           cargo 1.0
 github.setup        sharkdp fd 7.3.0 v
 categories          sysutils
 platforms           darwin
-maintainers         {raimue @raimue} \
+maintainers         {saagarjha.com:saagar @saagarjha} \
                     openmaintainer
 license             {MIT Apache-2}
 
@@ -86,7 +86,7 @@ pre-build {
     file mkdir ${worksrcpath}/shell_completions
 }
 
-build.env-append    SHELL_COMPLETIONS_DIR="shell_completions"
+build.env-append    SHELL_COMPLETIONS_DIR=shell_completions
 
 destroot {
     xinstall -m 755 ${worksrcpath}/target/[cargo.rust_platform]/release/${name} ${destroot}${prefix}/bin/

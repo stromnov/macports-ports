@@ -2,59 +2,22 @@
 
 PortSystem          1.0
 PortGroup           python 1.0
+PortGroup           obsolete 1.0
 
 name                py-pyobjc-cocoa
-python.rootname     pyobjc-framework-Cocoa
-version             5.1.2
-revision            0
-categories-append   devel
-platforms           darwin
+version             6.1
+revision            1
+
+categories          python devel
 license             MIT
-maintainers         nomaintainer
 
-description         cocoa wrappers for PyObjC
-long_description    This port provides the CoreFoundation, Foundation \
-                    and AppKit wrappers for use with PyObjC.
-homepage            https://pythonhosted.org/pyobjc/
+replaced_by         py-pyobjc
 
-master_sites        pypi:p/${python.rootname}/
-distname            ${python.rootname}-${version}
+description         obsolete wrapper for PyObjC
 
-checksums           rmd160  28fd8ad8bb32fd01b618589a5cfb446aaa8c2875 \
-                    sha256  a13f451071b7bd00e773874ddf5de4618c121448312d3409dac93a0bcc71962e \
-                    size    3787306
-
-python.versions     27 34 35 36 37
-
-if {${name} ne ${subport}} {
-    depends_build-append \
-                        port:py${python.version}-setuptools
-    depends_lib-append  port:py${python.version}-pyobjc
-
-    if {${configure.sdkroot} eq ""} {
-        set sdkroot "/"
-    } else {
-        set sdkroot ${configure.sdkroot}
+foreach v {36 37 38} {
+    subport py$v-pyobjc-cocoa {
+        replaced_by py$v-pyobjc
     }
-
-    build.env-append    SDKROOT=${sdkroot}
-
-    platform darwin 8 {
-        depends_build
-        depends_lib
-        pre-fetch {
-            ui_error "${subport} @${version} requires Mac OS X 10.5 or later"
-            return -code error "incompatible Mac OS X version"
-        }
-    }
-
-    post-destroot {
-        xinstall -m 0644 -W ${worksrcpath} \
-            LICENSE.txt README.txt \
-            ${destroot}${prefix}/share/doc/${subport}
-        copy ${worksrcpath}/Examples \
-            ${destroot}${prefix}/share/doc/${subport}/examples
-    }
-
-    livecheck.type  none
 }
+#   Remove in November, 2020

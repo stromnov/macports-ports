@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-jinja2
-version             2.10
+version             2.11.1
 categories-append   devel
 license             BSD
 maintainers         {jmr @jmroot} openmaintainer
@@ -20,19 +20,16 @@ long_description \
 platforms           darwin
 
 homepage            http://jinja.pocoo.org/
-master_sites        pypi:J/Jinja2
-distname            Jinja2-${version}
+python.rootname     Jinja2
 
-checksums           md5 61ef1117f945486472850819b8d1eb3d \
-                    rmd160 552a79aaea2fa3e5b5211f89260fc8416cc28ce4 \
-                    sha256 f84be1bb0040caca4cea721fcbbbbd61f9be9464ca236387158b0feea01914a4
+checksums           md5 5d88c7e77aa63fc852a04f65dbfe5594 \
+                    rmd160 71a7a6b85b2bc5d233885027d4584fa94807be82 \
+                    sha256 93187ffbc7808079673ef52771baa950426fd664d3aad1d0fa3e95644360e250
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 if {$subport ne $name} {
-    depends_lib     port:py${python.version}-setuptools \
-                    port:py${python.version}-markupsafe
+    depends_build   port:py${python.version}-setuptools
+    depends_lib     port:py${python.version}-markupsafe
     livecheck.type  none
-} else {
-    livecheck.name  Jinja2
 }

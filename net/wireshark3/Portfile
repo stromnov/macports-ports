@@ -4,7 +4,8 @@ PortSystem          1.0
 PortGroup           cmake 1.0
 
 name                wireshark3
-version             3.0.0
+version             3.0.7
+revision            0
 categories          net
 license             {GPL-2 GPL-3}
 maintainers         {darkart.com:opendarwin.org @ghosthound}
@@ -26,10 +27,10 @@ distfiles           wireshark-${version}${extract.suffix}
 
 worksrcdir          wireshark-${version}
 
-checksums           sha256  bc4f30f5b2e94f3a696fef9de44673cdf402db90aac5299966da647f708f009e \
-                    rmd160  9211657dc9d58eae871547d90021c376bb52f761 \
-                    sha1    c254d850c81d85964aa23d60bb6fdb1373032490 \
-                    size    30953760
+checksums           sha256  3b2b279017753398b8d5deb440db5f98a205eea35f9417e5fa2893947e7992f2 \
+                    rmd160  7168f7bf9f724e9ec3236c998c54368d85820718 \
+                    sha1    c870ef818952a741773fc1143fba2834c76a1dd0 \
+                    size    30851928
 
 conflicts           wireshark-devel wireshark wireshark2 wireshark22 wireshark24
 
@@ -38,6 +39,7 @@ depends_build-append \
 
 depends_lib         path:lib/pkgconfig/glib-2.0.pc:glib2 \
                     path:lib/libssl.dylib:openssl \
+                    port:libgcrypt \
                     port:libpcap \
                     port:lz4
 
@@ -47,7 +49,7 @@ configure.args-append \
                     -DENABLE_APPLICATION_BUNDLE=OFF \
                     -DENABLE_ADNS=OFF \
                     -DENABLE_CARES=OFF \
-                    -DENABLE_GCRYPT=OFF \
+                    -DENABLE_GCRYPT=ON \
                     -DENABLE_GEOIP=OFF \
                     -DENABLE_GNUTLS=OFF \
                     -DENABLE_KERBEROS=OFF \
@@ -65,10 +67,14 @@ variant qt5 conflicts no_gui description {Build wireshark with a qt5 GUI} {
     configure.args-replace  -DENABLE_APPLICATION_BUNDLE=OFF -DENABLE_APPLICATION_BUNDLE=ON
     configure.args-replace  -DBUILD_wireshark=OFF -DBUILD_wireshark=ON
     configure.args-append   -DENABLE_QT5=ON
-    depends_lib-append      port:qt5-qtmacextras port:qt5-qtmultimedia port:qt5-qtsvg port:qt5-qttranslations
+    qt5.depends_component   qtbase \
+                            qtmacextras \
+                            qtmultimedia \
+                            qtsvg \
+                            qttranslations
 
     post-destroot {
-        move ${destroot}/${prefix}/bin/Wireshark.app ${destroot}${applications_dir}/Wireshark.app
+        move ${destroot}${prefix}/bin/Wireshark.app ${destroot}${applications_dir}/Wireshark.app
     }
 }
 
@@ -101,11 +107,6 @@ variant gnutls description {Build with GNU TLS support} {
     depends_lib-append      port:gnutls
 }
 
-variant libgcrypt description {Build with GNU crypto support} {
-    configure.args-replace  -DENABLE_GCRYPT=OFF -DENABLE_GCRYPT=ON
-    depends_lib-append      port:libgcrypt
-}
-
 variant cares conflicts adns description description {Build with c-ares support} {
     configure.args-replace  -DENABLE_CARES=OFF -DENABLE_CARES=ON
     depends_lib-append      port:c-ares
@@ -122,10 +123,37 @@ variant geoip description {Build with GeoIP support} {
     depends_lib-append      port:libgeoip
 }
 
-default_variants +zlib +libsmi +gnutls +libgcrypt +cares +geoip +kerberos5
+variant chmodbpf description {Enable Wireshark to acces macOS capture devices} {
+    depends_run             port:wireshark-chmodbpf
+}
+
+variant python35 description {Use python35 during build} {
+    depends_build-append    port:python35
+}
+
+variant python36 description {Use python36 during build} {
+    depends_build-append    port:python36
+}
+
+variant python37 description {Use python37 during build} {
+    depends_build-append    port:python37
+}
+
+default_variants +zlib +libsmi +gnutls +geoip +kerberos5 +chmodbpf
 
 if {![variant_isset qt5] && ![variant_isset no_gui]} {
     default_variants-append +qt5
+}
+
+if {![variant_isset adns] && ![variant_isset cares]} {
+    default_variants-append +cares
+}
+
+## if no python3* variant is specified, add +python37
+## XYZZY: it would be better to detect which python3* is already installed and use that...
+if {![variant_isset python35] && ![variant_isset python36] && \
+    ![variant_isset python37]} {
+    default_variants-append +python37
 }
 
 post-destroot {
@@ -147,5 +175,3 @@ livecheck.type      regex
 livecheck.url       ${homepage}download.html
 livecheck.regex     "Stable Release \\((\\d+(?:\\.\\d+)*)"
 
-#
-##EOF

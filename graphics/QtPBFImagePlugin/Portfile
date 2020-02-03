@@ -4,7 +4,8 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           qmake5 1.0
 
-github.setup        tumic0 QtPBFImagePlugin 1.2
+github.setup        tumic0 QtPBFImagePlugin 2.1
+revision            0
 categories          graphics
 platforms           darwin
 license             LGPL-3
@@ -13,9 +14,9 @@ maintainers         {@sikmir gmail.com:sikmir} openmaintainer
 description         PBF image plugin for Qt5
 long_description    Qt image plugin for displaying Mapbox vector tiles.
 
-checksums           rmd160  e7c856165f736dbd727d2b23e77a351adeb1aac8 \
-                    sha256  b3134181786aab74aeeed2790ea34f440f8de1a436eb2be09695a36f0e0be457 \
-                    size    194900
+checksums           rmd160  f8737167e2c14987a31b9ce6225fcf9be2c68701 \
+                    sha256  fe2f4268ef85d3caadec9ec8cf245782d6aa6221db49e826a3a84b758e360dac \
+                    size    195812
 
 configure.args-append \
                     PROTOBUF=${prefix} ZLIB=${prefix}

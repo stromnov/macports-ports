@@ -4,14 +4,14 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-more-itertools
-version             6.0.0
+version             8.2.0
 revision            0
 categories-append   devel
 platforms           darwin
 license             MIT
 supported_archs     noarch
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 maintainers         {stromnov @stromnov} openmaintainer
 
@@ -19,19 +19,16 @@ description         More routines for operating on iterables, beyond itertools.
 long_description    ${description}
 
 homepage            https://github.com/erikrose/more-itertools
-master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
-distname            ${python.rootname}-${version}
-
-checksums           rmd160  e13a5c10bb652718fabb54638fd00ac773504004 \
-                    sha256  590044e3942351a1bdb1de960b739ff4ce277960f2425ad4509446dbace8d9d1 \
-                    size    68178
+checksums           rmd160  d9ace6b38e1b02e205a88df54fefa3f2d2d88c49 \
+                    sha256  b1ddb932186d8a6ac451e1d95844b382f55e12686d51ca0c68b6f61f2ab7a507 \
+                    size    82785
 
 if {${name} ne ${subport}} {
     depends_build-append \
                         port:py${python.version}-setuptools
 
-    if {${python.version} < 34} {
+    if {${python.version} eq 27} {
         version             5.0.0
         revision            0
         distname            ${python.rootname}-${version}

@@ -3,7 +3,7 @@
 PortSystem          1.0
 
 name                xterm
-version             344
+version             352
 revision            0
 categories          x11
 license             X11
@@ -15,12 +15,12 @@ long_description    The xterm program is a terminal emulator for the X \
                     including colors, Unicode, etc.
 
 homepage            https://invisible-island.net/xterm/
-master_sites        ftp://ftp.invisible-island.net/xterm/ \
+master_sites        ftp://ftp.invisible-island.net/pub/xterm/ \
                     https://invisible-mirror.net/archives/xterm/
 
-checksums           rmd160  a29abf8f8e1178838290c7469463302ec0672e1d \
-                    sha256  ccceb8f6119ae24ab422d7ce7c5713114d304c856daf0d922efc198b56accdf5 \
-                    size    1355326
+checksums           rmd160  fca12c34538f6e76c91b4584e5782adfb2c893e4 \
+                    sha256  7342f8da0e5337ed8c8722b05257d90b1bd2f9b04f3a2d9c10ad05e95c52d57e \
+                    size    1405420
 
 extract.suffix      .tgz
 
@@ -44,6 +44,7 @@ patch.pre_args -p1
 configure.args      --mandir=${prefix}/share/man --enable-luit \
                     --enable-logging --enable-wide-chars \
                     --enable-256-color --enable-load-vt-fonts \
+                    --enable-double-buffer \
                     --x-include=${prefix}/include --x-lib=${prefix}/lib \
                     --with-app-defaults=${prefix}/share/X11/app-defaults
 

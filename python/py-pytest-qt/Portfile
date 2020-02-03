@@ -4,32 +4,35 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-pytest-qt
-version             3.2.2
+version             3.3.0
+revision            0
+
 categories-append   devel
 platforms           darwin
+supported_archs     noarch
 license             MIT
-
-python.versions     27 34 35 36 37
-
-maintainers         {gmail.com:ottenr.work @reneeotten} openmaintainer
+maintainers         {reneeotten @reneeotten} openmaintainer
 
 description         pytest support for PyQt and PySide applications
 long_description    ${description}
 
 homepage            https://github.com/pytest-dev/pytest-qt
 master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
-
 distname            ${python.rootname}-${version}
 
-checksums           rmd160  2076a4d3d069a626d8370d86dae6f0c5f5383bb0 \
-                    sha256  f6ecf4b38088ae1092cbd5beeaf714516d1f81f8938626a2eac546206cdfe7fa \
-                    size    114618
+checksums           rmd160  4921d99da764e7e20ac092408b840e3892b1cbed \
+                    sha256  714b0bf86c5313413f2d300ac613515db3a1aef595051ab8ba2ffe619dbe8925 \
+                    size    113439
+
+python.versions     27 35 36 37 38
 
 if {${name} ne ${subport}} {
-    depends_build-append    port:py${python.version}-setuptools \
-                            port:py${python.version}-setuptools_scm
+    depends_build-append \
+                    port:py${python.version}-setuptools \
+                    port:py${python.version}-setuptools_scm
 
-    depends_lib-append      port:py${python.version}-pytest
+    depends_lib-append \
+                    port:py${python.version}-pytest
 
     post-destroot {
         set docdir ${prefix}/share/doc/${subport}
@@ -38,5 +41,5 @@ if {${name} ne ${subport}} {
             README.rst ${destroot}${docdir}
     }
 
-    livecheck.type      none
+    livecheck.type  none
 }

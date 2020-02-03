@@ -4,15 +4,17 @@ PortSystem          1.0
 PortGroup           compilers 1.0
 
 name                wcslib
-version             6.2
-checksums           rmd160  9a1f4b3660f21fe86affd2e5562e39d00341fd57 \
-                    sha256  bb4dfe242959bc4e5540890e0475754ad4a027dba971903dc4d82df8d564d805 \
-                    size    2377603
+version             7.1
+revision            0
+
+checksums           rmd160  4e261b9175207a0d3f64eb74d9523d23ab450638 \
+                    sha256  f0bb749eb384794501ad3f71cc10d69debcc0dfca2a395ef57062245c9165116 \
+                    size    2411734
 
 categories          science
 license             LGPL-3+
 platforms           darwin
-maintainers         {robitaille @astrofrog} openmaintainer
+maintainers         nomaintainer
 description         Library for handling World Coordinate System in FITS files
 long_description    A C library, with a set of Fortran wrappers, that \
                     implements the World Coordinate System (WCS) standard \

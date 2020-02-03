@@ -2,9 +2,9 @@
 
 PortSystem          1.0
 PortGroup           texlive 1.0
+PortGroup           github 1.0
 
-name                pgf
-version             3.1.1
+github.setup        pgf-tikz pgf 3.1.5a
 revision            0
 categories          tex textproc
 platforms           darwin
@@ -23,29 +23,23 @@ homepage            http://sourceforge.net/projects/pgf/
 
 depends_lib         bin:texhash:texlive-basic
 
-master_sites        sourceforge:project/pgf/pgf/version%20${version}
-use_zip             yes
-distname            ${name}_${version}.tds
-
-checksums           rmd160  4bfe87645d40cb486502e47793352567b68228b4 \
-                    sha256  a07bd226215e2e7f739f501bd25dbd6b54e8538d134c542392121b3978aa61a6 \
-                    size    12854143
-
-extract.mkdir       yes
+checksums           rmd160  2402e284a935d17ac1c90d86006d26dc7404d0fd \
+                    sha256  c21c2537eb20453e147034ef5346d2de622b844b21942dd9c34514129de319e4 \
+                    size    2597383
 
 # the patchfiles are only relevant if building the C code gets enabled one day,
 # but the patches are not complete yet (building the module is not working)
-patchfiles          patch-MakefileConfig.mk.diff \
-                    patch-Makefile.diff
-post-patch {
-    # instead of patching all this one could also create LocalMakefileConfig.mk
-    set mymakefileconfig ${worksrcpath}/source/generic/pgf/c/config/MakefileConfig.mk
-    reinplace s|@@PREFIX@@|${prefix}| ${mymakefileconfig}
-    reinplace s|@@CC@@|${configure.cc}| ${mymakefileconfig}
-    reinplace s|@@ARCHFLAGS@@|-arch\ ${build_arch}| ${mymakefileconfig}
-    reinplace s|@@CFLAGS@@|${configure.cflags}| ${mymakefileconfig}
-    reinplace s|@@LDFLAGS@@|${configure.ldflags}\ -llua| ${mymakefileconfig}
-}
+# patchfiles          patch-MakefileConfig.mk.diff \
+#                     patch-Makefile.diff
+# post-patch {
+#     # instead of patching all this one could also create LocalMakefileConfig.mk
+#     set mymakefileconfig ${worksrcpath}/source/generic/pgf/c/config/MakefileConfig.mk
+#     reinplace s|@@PREFIX@@|${prefix}| ${mymakefileconfig}
+#     reinplace s|@@CC@@|${configure.cc}| ${mymakefileconfig}
+#     reinplace s|@@ARCHFLAGS@@|-arch\ ${build_arch}| ${mymakefileconfig}
+#     reinplace s|@@CFLAGS@@|${configure.cflags}| ${mymakefileconfig}
+#     reinplace s|@@LDFLAGS@@|${configure.ldflags}\ -llua| ${mymakefileconfig}
+# }
 
 use_configure       no
 
@@ -55,7 +49,7 @@ build { }
 # build.dir         ${worksrcpath}/source/generic/pgf/c
 
 destroot {
-    set r ${workpath}/${name}_${version}.tds
+    set r ${worksrcpath}
     file mkdir ${destroot}${texlive_texmfports}/
     file copy ${r}/doc ${destroot}${texlive_texmfports}/
     file copy ${r}/source ${destroot}${texlive_texmfports}/
@@ -69,5 +63,3 @@ post-activate {
 post-deactivate {
     texlive.mktexlsr
 }
-
-livecheck.regex     {/version ([.\d]+)}

@@ -2,8 +2,9 @@
 
 PortSystem              1.0
 PortGroup               github 1.0
+PortGroup               legacysupport 1.0
 
-github.setup            jarun nnn 2.3 v
+github.setup            jarun nnn 2.9 v
 revision                0
 categories              sysutils
 license                 BSD
@@ -12,24 +13,27 @@ platforms               darwin
 description             tiny, lightning fast, feature-packed file manager
 long_description        ${name} is a tiny, lightning fast, feature-packed file manager.
 
-checksums               rmd160  9a7abf985e634ee07b722915143a9a42320116cc \
-                        sha256  1589d7e28cd8073e0b922dddb03aa5ac6ceea40c0cf87ebbece88a9da2861a2d \
-                        size    56311
+checksums               rmd160  4376a94485a4c18eaf34af3b70c2bf1f68522989 \
+                        sha256  c55d99cdc805c5c25395923752b1876223a31cda13c369e92d7b5e17497b5c6f \
+                        size    98042
 
 installs_libs           no
-
-patchfiles              patch-Makefile.diff
 
 depends_build           port:pkgconfig
 
 depends_lib             port:readline \
                         port:ncurses
 
-# see https://lists.macports.org/pipermail/macports-dev/2018-November/thread.html#39694
-configure.cmd           printenv
-configure.pre_args
-configure.universal_args
-configure.post_args     {>> Makefile.inc}
+compiler.c_standard     2011
+configure.cflags-append -std=c11
 
-configure.env-append    PREFIX=${prefix} \
-                        CFLAGS_OPTIMIZATION=
+use_configure           no
+variant universal       {}
+
+build.args-append       CC=${configure.cc} \
+                        CFLAGS_OPTIMIZATION="" \
+                        CPPFLAGS="${configure.cppflags}" \
+                        CFLAGS="${configure.cflags} [get_canonical_archflags cc]" \
+                        LDFLAGS="${configure.ldflags} [get_canonical_archflags ld]"
+
+destroot.args-append    PREFIX=${prefix}

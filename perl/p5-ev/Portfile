@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.26 5.28
-perl5.setup         EV 4.25 ../../authors/id/M/ML/MLEHMANN
+perl5.branches      5.26 5.28 5.30
+perl5.setup         EV 4.31 ../../authors/id/M/ML/MLEHMANN
 license             {Artistic-1 GPL}
 maintainers         nomaintainer
 description         EV - perl interface to libev, a high performance full-featured event loop
@@ -12,17 +12,15 @@ long_description    ${description}
 
 platforms           darwin
 
-checksums           rmd160  9b9ab7c868255901155b0612321711c5379dd549 \
-                    sha256  2e65c8e8f2358599f9a48f766cc1b3ad0eaf2e6cef416adc8ad9cddc3f329c6a \
-                    size    195508
+checksums           rmd160  ba54fa7df065c8905363d526d5d5c47204589445 \
+                    sha256  8bcb1944c074220deaee8a5f43968b2bb9b658965bf17f4e4aa3469cb785b4cb \
+                    size    213829
 
 if {${perl5.major} != ""} {
     depends_build-append \
                     port:p${perl5.major}-canary-stability
 
-#   builds using embedded copy of libev
-#   current version is libev 4.25
-
+#   builds using embedded libev
     depends_lib-append \
                     port:p${perl5.major}-common-sense
 }

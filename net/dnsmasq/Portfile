@@ -48,9 +48,8 @@ post-patch {
 use_configure       no
 
 variant universal {}
-
-build.env-append    CC="${configure.cc} [get_canonical_archflags]"
-destroot.env-append    CC="${configure.cc} [get_canonical_archflags]"
+build.env-append    "CC=${configure.cc} [get_canonical_archflags]"
+destroot.env-append    "CC=${configure.cc} [get_canonical_archflags]"
 
 destroot.args       PREFIX=${prefix}
 destroot.keepdirs   ${destroot}${prefix}/var/run/${name}

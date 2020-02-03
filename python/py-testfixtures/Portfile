@@ -4,12 +4,15 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-testfixtures
-version             6.6.0
+version             6.11.0
+revision            0
+
 categories-append   devel
 platforms           darwin
+supported_archs     noarch
 license             MIT
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 maintainers         {khindenburg @kurthindenburg} openmaintainer
 
@@ -21,12 +24,24 @@ master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
 distname            ${python.rootname}-${version}
 
-checksums           rmd160  b58b3ded6d9faad72a6f104d989407e3b4bbcce5 \
-                    sha256  361e0a557f95e351ee4487a14eb26ccb1337038a33f16f588bcb0be90977d80b \
-                    size    112193
+checksums           rmd160  08ba0c713533f6d05a1eba24b4742aca06f95631 \
+                    sha256  1ef5c8e57b75883593b21c9bd9bd5a5ce7bbd852fc71486dd3c6b913b697b046 \
+                    size    113306
 
 if {${name} ne ${subport}} {
     depends_build-append  port:py${python.version}-setuptools
+
+    post-extract {
+        copy -force ${filespath}/conftest.py ${worksrcpath}/testfixtures/tests/
+    }
+
+    # Run a few tests; a lot of the others require sybil
+    depends_test-append port:py${python.version}-pytest
+    test.run            yes
+    test.dir            "${worksrcpath}/build/lib/testfixtures/tests"
+    test.cmd            py.test-${python.branch} "test_compare.py test_comparison.py test_date.py test_datetime.py test_diff.py test_shouldwarn.py test_stringcomparison.py"
+    test.target
+    test.env            PYTHONPATH=${worksrcpath}/build/lib
 
     livecheck.type      none
 }

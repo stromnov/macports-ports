@@ -1,124 +1,127 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
-PortSystem          1.0
-PortGroup           cmake          1.1
-PortGroup           cxx11          1.1
-PortGroup           mpi            1.0
-PortGroup           linear_algebra 1.0
-PortGroup           muniversal     1.0
+PortSystem              1.0
+PortGroup               cmake          1.1
+PortGroup               mpi            1.0
+PortGroup               linear_algebra 1.0
+PortGroup               muniversal     1.0
 
-name                gmsh
-conflicts           gmsh-devel
-version             4.1.5
-categories          science
-platforms           darwin
-license             GPL-2+
-maintainers         {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
-description         Finite element mesh generator in 1D, 2D and 3D
-long_description    \
-        Gmsh is an automatic 3D finite element mesh generator (primarily   \
-        Delaunay) with build-in CAD and post-processing facilities. Its     \
-        design goal is to provide a simple meshing tool for academic test   \
-        cases with parametric input and up to date visualization            \
-        capabilities.
+name                    gmsh
+version                 4.5.2
+revision                0
+categories              science
+platforms               darwin
+license                 GPL-2+
+maintainers             {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+description             Finite element mesh generator in 1D, 2D and 3D
+long_description        Gmsh is an automatic 3D finite element mesh generator (primarily   \
+                        Delaunay) with build-in CAD and post-processing facilities. Its     \
+                        design goal is to provide a simple meshing tool for academic test   \
+                        cases with parametric input and up to date visualization            \
+                        capabilities.
 
-homepage            http://gmsh.info
-master_sites        http://gmsh.info/src/
-distname            gmsh-${version}-source
-extract.suffix      .tgz
+homepage                http://gmsh.info
+master_sites            http://gmsh.info/src/
+distname                gmsh-${version}-source
+extract.suffix          .tgz
 
-checksums           rmd160  56297719a03c7e390328c32fe4409a27511e7d50 \
-                    sha256  654d38203f76035a281006b77dcb838987a44fd549287f11c53a1e9cdf598f46 \
-                    size    12707303
+checksums               rmd160  3bf4b17d4b7eef831782789f951d9143502184bc \
+                        sha256  0120fe240d32ff1d7457f1b6b350cb85c1e01801f9d371a8656c526474882682 \
+                        size    14841960
 
-patchfiles          patch-CMakeLists.txt.diff
+compiler.cxx_standard   2011
+
+patchfiles              patch-CMakeLists.txt.diff
 
 mpi.setup
+veclibfort              no
 
-depends_lib-append  \
-    path:lib/libfltk.dylib:fltk \
-    port:gmp \
-    port:hdf5 \
-    port:libpng \
-    port:jpeg \
-    port:gmm \
-    path:lib/pkgconfig/cairo.pc:cairo \
-    port:petsc \
-    port:slepc \
-    port:libANN \
-    port:cgnslib \
-    port:metis \
-    port:opencascade \
-    port:szip \
-    port:zlib
+depends_lib-append      port:alglib \
+                        path:lib/libfltk.dylib:fltk \
+                        port:gmp \
+                        port:mathex \
+                        port:libmed \
+                        port:mmg3d4 \
+                        port:hdf5 \
+                        port:libpng \
+                        port:jpeg \
+                        port:gmm \
+                        path:lib/pkgconfig/cairo.pc:cairo \
+                        port:libANN \
+                        port:cgnslib \
+                        port:metis \
+                        port:opencascade \
+                        port:voroxx \
+                        port:szip \
+                        port:zlib
 
 # see http://gmsh.info/doc/texinfo/gmsh.html#Compiling-the-source-code
 
-# FLTK native file chooser was never used (not entirely clear why)
-#    see https://github.com/macports/macports-ports/commit/ae18700dfba27d7084104ecfd8c33814008e967b
 # install static library
 # install shared library
 # use shared library for Gmsh executable
 # use MacPorts libraries
-configure.args-append \
-    -DENABLE_NATIVE_FILE_CHOOSER=OFF \
-    -DENABLE_BUILD_LIB=ON \
-    -DENABLE_BUILD_SHARED=ON \
-    -DENABLE_BUILD_DYNAMIC=ON \
-    -DENABLE_SYSTEM_CONTRIB=ON
+configure.args-append   -DENABLE_BUILD_LIB=ON \
+                        -DENABLE_BUILD_SHARED=ON \
+                        -DENABLE_BUILD_DYNAMIC=ON \
+                        -DENABLE_SYSTEM_CONTRIB=ON
 
 # ACIS is proprietary
-# libmed does not exist in MacPorts
-# Voro++ does not exist in MacPorts
-# Gmsh requires mmg version < 5
 # avoid circular dependencies
-configure.args-append \
-    -DENABLE_ACIS=OFF \
-    -DENABLE_MED=OFF \
-    -DENABLE_VOROPP=OFF \
-    -DENABLE_MMG3D=OFF \
-    -DENABLE_GETDP=OFF
+configure.args-append   -DENABLE_ACIS=OFF \
+                        -DENABLE_GETDP=OFF
 
-configure.args-append \
-    -DPETSC_DIR=${prefix}/lib/petsc \
-    -DSLEPC_DIR=${prefix}/lib/slepc
-
-configure.env-append \
-    CASROOT=${prefix}
+configure.env-append    CASROOT=${prefix}
 
 pre-configure {
     configure.args-append \
-        -DBLAS_LAPACK_LIBRARIES="-L${prefix}/lib ${linalglib}"
+                        -DBLAS_LAPACK_LIBRARIES="-L${prefix}/lib ${linalglib}"
 }
 
 if {[mpi_variant_isset]} {
-    configure.args-append -DENABLE_MPI=ON
+    configure.args-append \
+                        -DENABLE_MPI=ON
 }
 
 variant docs description {build documentation} {
     build.target-append pdf
     depends_build-append \
-        port:texinfo \
-        port:texlive-latex
+                        port:texinfo \
+                        port:texlive-latex
 }
 
 variant getdp description {Enable GetDP solver} {
-    depends_lib-append    port:getdp
-    configure.args-delete -DENABLE_GETDP=OFF
+    depends_lib-append  port:getdp
+    configure.args-delete \
+                        -DENABLE_GETDP=OFF
 }
 
-subport gmsh-devel {
-    conflicts           gmsh
+variant petsc description {Enable PETSc linear solvers and SLEPc eigensolvers} {
+    depends_lib-append  port:petsc \
+                        port:slepc
 
-    fetch.type          git
-    git.url             https://gitlab.onelab.info/gmsh/gmsh.git
-    git.branch          d28e0c8829ef6b21486c3cde9ec5962caf23cf2c
-    # see https://gitlab.onelab.info/gmsh/gmsh/blob/master/CMakeLists.txt
-    version             4.2.0
-    revision            0
+    configure.args-append \
+                        -DENABLE_PETSC=ON \
+                        -DENABLE_SLEPC=ON \
+                        -DPETSC_DIR=${prefix}/lib/petsc \
+                        -DSLEPC_DIR=${prefix}/lib/slepc
+}
 
-    livecheck.type     regexm
-    livecheck.url      https://gitlab.onelab.info/gmsh/gmsh
-    livecheck.version  ${git.branch}
-    livecheck.regex    "/gmsh/gmsh/commit/(\[a-zA-Z0-9\]+)"
+variant oce description {use Community Edition version of Open CASCADE} {
+    depends_lib-replace port:opencascade port:oce
+}
+
+variant openmp description {enable support for OpenMP} {
+    configure.args-append \
+                        -DENABLE_OPENMP=ON
+}
+if {[variant_isset openmp]} {
+    compiler.openmp_version 2.5
+}
+
+# please remove on 2020-03-16
+subport ${name}-devel {
+    replaced_by         ${name}
+    PortGroup           obsolete 1.0
+
 }

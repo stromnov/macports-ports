@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.26 5.28
-perl5.setup         Compress-Raw-Bzip2 2.084
+perl5.branches      5.26 5.28 5.30
+perl5.setup         Compress-Raw-Bzip2 2.093 ../../authors/id/P/PM/PMQS
 license             {Artistic-1 GPL}
 maintainers         nomaintainer
 description         Perl low-level interface to bzip2 compression library
@@ -14,8 +14,8 @@ long_description    Compress::Raw::Bzip2 provides an interface to the \
                     IO::Compress::Bzip2 and IO::Compress::Bunzip2.
 platforms           darwin
 
-checksums           rmd160  afa0562e224a3311b66ce89af422f322147a83d3 \
-                    sha256  7d16debb73eb862c6a3c2ab4bcc31f165023ad4a0a257316227ba550a8ce924f \
-                    size    137689
+checksums           rmd160  256f47ad58b2f0c828e62591c16a650f738573b1 \
+                    sha256  295683131efc16024033b4b0d37da8b39e92ed9a8b32458db04a75cfbfd266e9 \
+                    size    138442
 
 # builds using embedded bzip2 source, no external dependency required

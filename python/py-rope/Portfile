@@ -4,12 +4,14 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           python 1.0
 
-github.setup        python-rope rope 0.12.0
+github.setup        python-rope rope 0.16.0
 name                py-rope
 revision            0
+
 platforms           darwin
-license             GPL-2+
-maintainers         {gmail.com:ottenr.work @reneeotten} openmaintainer
+supported_archs     noarch
+license             LGPL-3+
+maintainers         {reneeotten @reneeotten} openmaintainer
 
 description         python refactoring library
 long_description    Rope is a Python refactoring library that can be used \
@@ -18,24 +20,31 @@ long_description    Rope is a Python refactoring library that can be used \
                     assistance like auto-completion and access to \
                     documentation.
 
-supported_archs     noarch
+checksums           rmd160  1475de6cc38de7e1db5644d1423d90cb2a7b1af3 \
+                    sha256  55028271ccff9fbea73d90bef28a8575f629815acdcd46f4f8eb14c7890c9542 \
+                    size    244571
 
-checksums           rmd160  23dfe8d4d87e4ec43917f2c4b3b5c1815a4fd5e6 \
-                    sha256  6656dddf97c8dbd66f8d6c2fdb102cd8d1359d06554aa32eb9e73fff3f7aa9f4 \
-                    size    247637
-
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37
 
 if {${name} ne ${subport}} {
     depends_build-append \
                     port:py${python.version}-setuptools
 
-    if {${python.version} < 35} {
-        depends_test-append \
-                    port:py${python.version}-unittest2
-    }
+    depends_test-append \
+                    port:py${python.version}-pytest
+
     test.run        yes
-    test.cmd        ${python.bin} setup.py
+    test.cmd        py.test-${python.branch}
+    test.args       -k 'not (test_hint_parametrized_iterable or test_hint_parametrized_iterator)'
+    test.target
+    test.env        PYTHONPATH=${worksrcpath}/build/lib
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} CONTRIBUTORS COPYING \
+            README.rst ${destroot}${docdir}
+    }
 
     livecheck.type  none
 }

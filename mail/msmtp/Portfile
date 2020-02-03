@@ -3,11 +3,11 @@
 PortSystem          1.0
 
 name                msmtp
-version             1.8.3
+version             1.8.7
 revision            0
 categories          mail
 platforms           darwin
-maintainers         nomaintainer
+maintainers         {@ra1nb0w irh.it:rainbow} openmaintainer
 license             GPL-3+
 description         SMTP client that can be used as an SMTP plugin for Mutt
 long_description    msmtp is an SMTP client that can be used as an SMTP \
@@ -21,9 +21,9 @@ homepage            https://marlam.de/msmtp/
 master_sites        ${homepage}releases/
 use_xz              yes
 
-checksums           rmd160  38a289c636a4b98e291a989bce6f1da9a16d6613 \
-                    sha256  3cb2eefd33d048f0f82de100ef39a494e44fd1485e376ead31f733d2f36b92b4 \
-                    size    336120
+checksums           rmd160  f5b7ce9a5433ec61fed976f659a8755302f4e6a9 \
+                    sha256  9a53bcdc244ec5b1a806934ecc7746d9d09db581f587bedf597e9da2f48c51f1 \
+                    size    340908
 
 depends_build       port:pkgconfig
 depends_lib         port:gettext \
@@ -39,8 +39,4 @@ platform macosx {
     configure.args-append   --with-macosx-keyring
 }
 
-variant openssl description {use openssl instead of gnutls} {
-    depends_lib-append    path:lib/libssl.dylib:openssl
-    depends_lib-delete    port:gnutls
-    configure.args-append --with-ssl=openssl
-}
+livecheck.url       https://marlam.de/msmtp/download/

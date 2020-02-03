@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.26 5.28
-perl5.setup         Net-Curl 0.39
+perl5.branches      5.26 5.28 5.30
+perl5.setup         Net-Curl 0.42
 license             MIT
 maintainers         {devans @dbevans} openmaintainer
 description         Net::Curl - Perl interface for libcurl
@@ -12,8 +12,9 @@ long_description    ${description}
 
 platforms           darwin
 
-checksums           rmd160  43161423875d8747658bfb0cb173e27a8f2741f3 \
-                    sha256  a6b92b9d5de34ecd64954a69d51fc8c2b5eda647494c4811e49dc71a0662a79b
+checksums           rmd160  8cba9a7f3fa1b56b0444ddd9eee06daaaf2b2fde \
+                    sha256  71876074c5ea009c5e008b31e33bc18a186578bd4ea2ba99332cb13e0320e1ee \
+                    size    102432
 
 if {${perl5.major} != ""} {
     depends_lib-append \
@@ -27,5 +28,5 @@ if {${perl5.major} != ""} {
     }
 
     configure.env-append \
-                    CURL_CONFIG="${prefix}/bin/curl-config"
+                    CURL_CONFIG=${prefix}/bin/curl-config
 }

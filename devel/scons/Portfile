@@ -4,11 +4,11 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                scons
-version             3.0.4
+version             3.1.2
 revision            0
-checksums           rmd160  2d7a741a6e206c84ef05d0fb113ce1e15be4c8db \
-                    sha256  e2b8b36e25492720a05c0f0a92a219b42d11ce0c51e3397a1e8296dfea1d9b1a \
-                    size    652334
+checksums           rmd160  6052ef4ebd702ce7dc9888d50c163664201c377f \
+                    sha256  7801f3f62f654528e272df780be10c0e9337e897650b62ddcee9f39fde13f8fb \
+                    size    668298
 
 categories          devel python
 platforms           darwin
@@ -39,9 +39,9 @@ post-patch {
 destroot.args       --install-man \
                     --no-version-script
 post-destroot {
-    xinstall -m 755 -d \
+    xinstall -m 0755 -d \
         ${destroot}${prefix}/share/doc/${name}
-    xinstall -m 644 -W ${worksrcpath} \
+    xinstall -m 0644 -W ${worksrcpath} \
         CHANGES.txt LICENSE.txt README.txt RELEASE.txt \
         ${destroot}${prefix}/share/doc/${name}
     foreach manfile [glob -tails -directory ${destroot}${python.prefix}/share/man/man1 *] {

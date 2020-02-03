@@ -16,8 +16,8 @@ set portfetch::mirror_sites::sites(afterstep) {
 
 set portfetch::mirror_sites::sites(apache) {
     https://mirror.aarnet.edu.au/pub/apache/
-    http://archive.apache.org/dist/
-    http://www.apache.org/dist/
+    https://archive.apache.org/dist/
+    https://www.apache.org/dist/
     http://mirror.cc.columbia.edu/pub/software/apache/
     http://mirror.facebook.net/apache/
     http://www.gtlib.gatech.edu/pub/apache/
@@ -26,7 +26,6 @@ set portfetch::mirror_sites::sites(apache) {
     http://mirror.internode.on.net/pub/apache/
     http://apache.is.co.za/
     https://www.mirrorservice.org/sites/ftp.apache.org/
-    http://apache.multidist.com/
     http://apache.pesat.net.id/
     http://apache.mirror.rafal.ca/
 }
@@ -208,7 +207,6 @@ set portfetch::mirror_sites::sites(cpan) {
     https://mirrors.nic.cz/CPAN/modules/by-module/
     https://mirrors.nxthost.com/CPAN/modules/by-module/
     https://mirrors.rit.edu/CPAN/modules/by-module/
-    https://mirrors.shu.edu.cn/CPAN/modules/by-module/
     https://mirrors.sonic.net/cpan/modules/by-module/
     https://mirrors.syringanetworks.net/CPAN/modules/by-module/
     https://mirrors.ucr.ac.cr/CPAN/modules/by-module/
@@ -224,7 +222,6 @@ set portfetch::mirror_sites::sites(cpan) {
     http://www.msg.com.mx/CPAN/modules/by-module/
     http://www.namesdir.com/mirrors/cpan/modules/by-module/
     https://www.perl.com/CPAN/modules/by-module/
-    http://www.pirbot.com/mirrors/cpan/modules/by-module/
     https://www.planet-elektronik.de/CPAN/modules/by-module/
 }
 
@@ -445,6 +442,7 @@ set portfetch::mirror_sites::sites(gnu) {
 }
 
 set portfetch::mirror_sites::sites(gnupg) {
+    https://gnupg.org/ftp/gcrypt/
     http://mirror.cc.columbia.edu/pub/software/gnupg/
     http://ftp.freenet.de/pub/ftp.gnupg.org/gcrypt/
     ftp://ftp.gnupg.org/gcrypt/
@@ -505,11 +503,13 @@ set portfetch::mirror_sites::sites(macports) {
 global os.platform os.major
 set distfiles_scheme [expr {${os.platform} eq "darwin" && ${os.major} < 10 ? "http" : "https"}]
 
+# Servers that support http.
 set portfetch::mirror_sites::sites(macports_distfiles) "
     ${distfiles_scheme}://distfiles.macports.org/:mirror
     http://aarnet.au.distfiles.macports.org/pub/macports/distfiles/:mirror
-    http://aus.us.distfiles.macports.org/macports/distfiles/:nosubdir
+    http://aus.us.distfiles.macports.org/macports/distfiles/:mirror
     http://cjj.kr.distfiles.macports.org/:mirror
+    http://cph.dk.distfiles.macports.org/:mirror
     http://fco.it.distfiles.macports.org/mirrors/macports-distfiles/:mirror
     http://jnb.za.distfiles.macports.org/distfiles/:mirror
     http://jog.id.distfiles.macports.org/macports/distfiles/:mirror
@@ -519,11 +519,15 @@ set portfetch::mirror_sites::sites(macports_distfiles) "
     http://nou.nc.distfiles.macports.org/pub/macports/distfiles.macports.org/:mirror
     http://nue.de.distfiles.macports.org/:mirror
     ${distfiles_scheme}://pek.cn.distfiles.macports.org/macports/distfiles/:mirror
-    ${distfiles_scheme}://mirrors.shu.edu.cn/macports/distfiles/:mirror
-    http://sea.us.distfiles.macports.org/macports/distfiles/:mirror
     http://ykf.ca.distfiles.macports.org/MacPorts/mpdistfiles/:mirror
-    http://ywg.ca.distfiles.macports.org/mirror/macports/distfiles/:mirror
 "
+
+# Servers that only support https.
+if {${distfiles_scheme} eq "https"} {
+    append portfetch::mirror_sites::sites(macports_distfiles) "
+        https://ywg.ca.distfiles.macports.org/mirror/macports/distfiles/:mirror
+    "
+}
 
 # To update this list use:
 # $ curl -s http://dev.mysql.com/downloads/mirrors.html | grep -E '>HTTP<' | sed -e 's,.*href="\(.*\)">.*,    \1/Downloads/:nosubdir,g' -e 's,//Downloads/:nosubdir,/Downloads/:nosubdir,g' | sort -u
@@ -896,39 +900,11 @@ set portfetch::mirror_sites::sites(tcltk) {
 set portfetch::mirror_sites::sites(tex_ctan) \
         $portfetch::mirror_sites::sites(ctan)
 
-set portfetch::mirror_sites::sites(trolltech) {
-    http://ftp.heanet.ie/mirrors/ftp.trolltech.com/pub/qt/source/:nosubdir
-    ftp://ftp.informatik.hu-berlin.de/pub1/Mirrors/ftp.troll.no/QT/qt/source/:nosubdir
-    http://get.qt.nokia.com/qt/source/:nosubdir
-    http://ftp.ntua.gr/pub/X11/Qt/qt/source/:nosubdir
-    http://releases.qt-project.org/qt4/source/:nosubdir
-    http://ftp.iasi.roedu.net/mirrors/ftp.trolltech.com/qt/source/:nosubdir
-    ftp://ftp.trolltech.com/qt/source/:nosubdir
-}
-
-set portfetch::mirror_sites::sites(xcontrib) {
-    http://ftp.gwdg.de/pub/x11/x.org/contrib/
-    http://ftp.x.org/contrib/
-    ftp://ftp.x.org/contrib/
-    ftp://ftp2.x.org/contrib/
-}
-
-set portfetch::mirror_sites::sites(xfree) {
-    https://mirror.aarnet.edu.au/pub/xfree86/
-    ftp://ftp.esat.net/pub/X11/XFree86/
-    http://ftp-stud.fht-esslingen.de/pub/Mirrors/ftp.xfree86.org/XFree86/
-    http://www.gtlib.gatech.edu/pub/XFree86/
-    http://ftp.gwdg.de/pub/xfree86/XFree86/
-    ftp://ftp.physics.uvt.ro/pub/XFree86/
-    ftp://ftp.fit.vutbr.cz/pub/XFree86/
-    ftp://ftp.xfree86.org/pub/XFree86/
-}
-
 set portfetch::mirror_sites::sites(xorg) {
     http://ftp.cica.es/mirrors/X/pub/
     ftp://ftp.cs.cuhk.edu.hk/pub/X11/
-    http://xorg.freedesktop.org/archive/
-    http://xorg.freedesktop.org/releases/
+    https://xorg.freedesktop.org/archive/
+    https://xorg.freedesktop.org/releases/
     http://mi.mirror.garr.it/mirrors/x.org/
     http://ftp.gwdg.de/pub/x11/x.org/pub/
     ftp://ftp.is.co.za/pub/x.org/pub/
@@ -941,5 +917,5 @@ set portfetch::mirror_sites::sites(xorg) {
     http://mirror.csclub.uwaterloo.ca/x.org/
     http://ftp.nara.wide.ad.jp/pub/X11/x.org/
     ftp://ftp.x.org/pub/
-    http://www.x.org/pub/
+    https://www.x.org/archive/
 }

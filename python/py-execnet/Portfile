@@ -4,8 +4,9 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-execnet
-version             1.5.0
+version             1.7.1
 revision            0
+
 categories-append   devel
 platforms           darwin
 supported_archs     noarch
@@ -20,20 +21,21 @@ master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
 distname            ${python.rootname}-${version}
 
-checksums           rmd160  7eb5a884de11a73c4258c0427f51ddadf10145ff \
-                    sha256  a7a84d5fa07a089186a329528f127c9d73b9de57f1a1131b82bb5320ee651f6a \
-                    size    168497
+checksums           rmd160  b4e599cdaaaab0208202dc518230087a864e233b \
+                    sha256  cacb9df31c9680ec5f95553976c4da484d407e85e41c83cb812aa014f0eddc50 \
+                    size    174157
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 if {${name} ne ${subport}} {
-    depends_build-append    port:py${python.version}-setuptools \
-                            port:py${python.version}-setuptools_scm
+    depends_build-append \
+                    port:py${python.version}-setuptools_scm
 
-    depends_lib-append      port:py${python.version}-apipkg
+    depends_lib-append \
+                    port:py${python.version}-apipkg
 
     post-destroot {
-        xinstall -m 0755 -d ${destroot}${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${prefix}/share/doc/${subport}
         xinstall -m 0644 -W ${worksrcpath} CHANGELOG.rst ISSUES.txt LICENSE README.rst \
             ${destroot}${prefix}/share/doc/${subport}
     }

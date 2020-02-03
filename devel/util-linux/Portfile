@@ -4,7 +4,8 @@ PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           legacysupport 1.0
 
-github.setup        karelzak util-linux 2.33.1 v
+github.setup        karelzak util-linux 2.35.1 v
+revision            1
 set branch          [join [lrange [split ${version} .] 0 1] .]
 categories          devel
 platforms           darwin
@@ -21,9 +22,9 @@ long_description    ${name} contains miscellaneous utility programs \
 master_sites        https://www.kernel.org/pub/linux/utils/util-linux/v${branch}/
 use_xz              yes
 
-checksums           rmd160  7a70b34cebe06bab634610c3ccff56d18c86573d \
-                    sha256  c14bd9f3b6e1792b90db87696e87ec643f9d63efa0a424f092a5a6b2f2dbef21 \
-                    size    4650936
+checksums           rmd160  c1a0b3a30f7c67d3075e53cc517cc688d6346089 \
+                    sha256  d9de3edd287366cd908e77677514b9387b22bc7b88f45b83e1922c3597f1d7f9 \
+                    size    5138360
 
 if { ${os.platform} eq "darwin" && ${os.major} < 9 } {
     configure.cppflags-append -D__DARWIN_UNIX03
@@ -62,12 +63,13 @@ configure.args      --disable-agetty \
                     --without-python
 
 # When adding new programs, check the .c file for license
-build.target        colcrt column look rename rev scriptreplay setsid
+build.target        colcrt column hardlink look rename rev scriptreplay setsid
 
 destroot {
     foreach path {
             text-utils/colcrt
             text-utils/column
+            misc-utils/hardlink
             misc-utils/look
             misc-utils/rename
             text-utils/rev

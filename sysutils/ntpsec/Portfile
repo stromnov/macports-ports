@@ -5,7 +5,8 @@ PortGroup           waf 1.0
 PortGroup           python 1.0
 
 name                ntpsec
-version             1.1.3
+version             1.1.8
+revision            0
 categories          sysutils net
 maintainers         {fwright.net:fw @fhgwright} openmaintainer
 description         A secure, hardened, and improved implementation of NTP
@@ -18,12 +19,23 @@ homepage            https://www.ntpsec.org/
 conflicts           ntp openntpd
 
 master_sites        ftp://ftp.ntpsec.org/pub/releases/
-checksums           rmd160  cdaae8f682cd4cc97a37d86aca1d3196cfea0437 \
-                    sha256  226b4b29d5166ea3d241a24f7bfc2567f289cf6ed826d8aeb9f2f261c1836bde \
-                    size    2462330
+checksums           rmd160  50b7c2729118e23bf1b45fad5bc74430690c84c7 \
+                    sha256  8445827a4d5029da508a11e9c8e7958db839f73b39de612ab3909244f89a1340 \
+                    size    2589363
 
-depends_build       port:bison
-depends_lib         path:lib/libssl.dylib:openssl port:python${python.version}
+# To avoid breaking any code that uses our Python package, keep the Python
+# version at 2.7 until we add variants for Python versions.  The upstream
+# code itself works with 2.6, 2.7, and 3.3+.
+python.versions     27
+
+# Note that the upstream --python option doesn't work correctly, so waf
+# must be run with the target Python version.  The waf PortGroup doesn't
+# currently allow selecting its Python version, but since it's hard-coded
+# for 2.7, we can ignore this for now.
+
+depends_build-append    port:bison
+depends_lib-append      path:lib/libssl.dylib:openssl \
+                        port:python${python.version}
 
 patchfiles          patch-PreHighSierra.diff
 
@@ -37,6 +49,7 @@ post-destroot {
 }
 
 use_configure       yes
+configure.post_args-delete --nocache
 configure.args      --alltests \
                     --define=CONFIG_FILE=${prefix}/etc/ntp.conf \
                     --disable-manpage \
@@ -45,6 +58,11 @@ configure.args      --alltests \
 destroot.cmd        ${build.cmd}
 
 default_variants    +doc
+
+# ntpsec has issues with universal builds:
+# 1) It expects endianness to be single-valued at configure time.
+# 2) There are problems with Python compiled extensions and universality.
+universal_variant   no
 
 variant classic description {Enable classic mode} {
     configure.args-append   --enable-classic-mode

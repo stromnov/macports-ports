@@ -2,13 +2,13 @@
 
 PortSystem          1.0
 PortGroup           wxWidgets 1.0
-wxWidgets.use       wxWidgets-3.0
+wxWidgets.use       wxWidgets-3.2
 PortGroup           cxx11   1.1
 
 name                saga
 categories          gis
 license             GPL
-version             7.0.0
+version             7.3.0
 revision            0
 #set branch          [join [lrange [split ${version} .] 0 1] .]
 platforms           darwin
@@ -23,9 +23,9 @@ long_description    SAGA is yet another open source GIS targeted towards\
 homepage            http://www.saga-gis.org/en/index.html
 master_sites        sourceforge:project/saga-gis/SAGA%20-%207/SAGA%20-%20${version}
 
-checksums           rmd160  546c2c4757c1489731a4fbe7a14428384b25c8ea \
-                    sha256  b30418eb60c28324536011c0331a4da14f8f3881ddf2ac240e35944229fdc592 \
-                    size    4646132
+checksums           rmd160  62dc55a24e32f4accb75222d83eb70a0c7135cb1 \
+                    sha256  f3c0f805bd48c3afbad56a35b6b0aa40e8e92799ed0ef0d682aea275fa36fbbc \
+                    size    4742356
 
 patchfiles          patch-configure.diff
 
@@ -35,8 +35,8 @@ depends_build       port:autoconf \
 
 depends_lib         port:geos \
                     port:gdal \
-                    port:proj \
-                    port:laszip \
+                    port:proj6 \
+                    port:liblas \
                     port:jasper \
                     port:fftw-3 \
                     port:unixODBC \
@@ -57,9 +57,9 @@ post-patch {
     }
 }
 
-configure.cppflags-append   -I${prefix}/lib/proj5/include 
+configure.cppflags-append   -I${prefix}/lib/proj6/include
 configure.cxxflags-append   -std=c++11
-configure.ldflags-append    -L${prefix}/lib/proj5/lib 
+configure.ldflags-append    -L${prefix}/lib/proj6/lib
 
 configure.args      --disable-openmp \
                     --enable-debug \
@@ -68,35 +68,35 @@ configure.args      --disable-openmp \
                     --disable-gui
 
 variant gui description "build the GUI interface" {
-    
+
     configure.args-delete   --disable-gui
 }
 
 variant python27 description "build Python 2.7 bindings" {
     depends_lib-append      port:python27\
                             port:swig-python
-    
+
     configure.args-append   --enable-python
-    configure.env-append    PYTHON="${prefix}/bin/python2.7"
-    configure.env-append    PYTHON_VERSION="2.7"
+    configure.env-append    PYTHON=${prefix}/bin/python2.7
+    configure.env-append    PYTHON_VERSION=2.7
 }
 
 variant libfire {
     configure.args-delete   --disable-libfire
 }
 
-variant postgresql10 conflicts postgresql96 {
+variant postgresql11 conflicts postgresql10 {
+    depends_lib-append      port:postgresql11
+    configure.args-append   --with-postgresql=${prefix}/lib/postgresql11/bin/pg_config
+}
+
+variant postgresql10 conflicts postgresql11 {
     depends_lib-append      port:postgresql10
     configure.args-append   --with-postgresql=${prefix}/lib/postgresql10/bin/pg_config
 }
 
-variant postgresql96 conflicts postgresql10 {
-    depends_lib-append      port:postgresql96
-    configure.args-append   --with-postgresql=${prefix}/lib/postgresql96/bin/pg_config
-}
-
-if {![variant_isset postgresql10] && ![variant_isset postgresql96]} {
-    default_variants    +postgresql10
+if {![variant_isset postgresql11] && ![variant_isset postgresql10]} {
+    default_variants    +postgresql11
 }
 
 post-destroot {

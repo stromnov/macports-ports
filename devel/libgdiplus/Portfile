@@ -4,7 +4,7 @@ PortSystem              1.0
 PortGroup               active_variants 1.1
 
 name                    libgdiplus
-version                 5.6
+version                 6.0.4
 revision                0
 categories              devel
 platforms               darwin
@@ -18,9 +18,9 @@ long_description        An implementation of the GDI+ API for Mono, an \
 homepage                https://www.mono-project.com/Libgdiplus
 master_sites            https://download.mono-project.com/sources/libgdiplus/
 
-checksums               rmd160  57f6b3c908215e6c5122263b7d38147237a0d0ff \
-                        sha256  e1f2c0443af8d37b1a2971feb8826c82e932cff36dab814b94fce22f4d3dc53a \
-                        size    731564
+checksums               rmd160  6a652cb64b213733d41aab41920469818409042e \
+                        sha256  b75c38c9765d5b3e2fb3da4435f169c732983878c0f94b8bf9012137022abf29 \
+                        size    1390998
 
 depends_build           port:pkgconfig
 
@@ -31,6 +31,7 @@ depends_lib             port:jpeg \
                         port:fontconfig \
                         port:libexif \
                         path:lib/pkgconfig/glib-2.0.pc:glib2 \
+                        path:lib/pkgconfig/pango.pc:pango \
                         path:lib/pkgconfig/cairo.pc:cairo
 
 patchfiles              patch-no_zlib.diff \
@@ -46,7 +47,7 @@ post-destroot {
     xinstall -d ${destroot}${docdir}
     xinstall -m 0644 -W ${worksrcpath} \
                         AUTHORS COPYING ChangeLog LICENSE NEWS \
-                        README TODO \
+                        README.md TODO \
                         ${destroot}${docdir}
 }
 
@@ -56,8 +57,3 @@ variant x11 {
     require_active_variants path:lib/pkgconfig/cairo.pc:cairo x11
 }
 default_variants +x11
-
-variant pango description {Enable Pango font rendering support (experimental)} {
-    depends_lib-append      path:lib/pkgconfig/pango.pc:pango
-    configure.args-append   --with-pango
-}

@@ -5,36 +5,38 @@ PortGroup           python 1.0
 PortGroup           select 1.0
 
 name                py-virtualenv
-version             16.4.3
+version             16.7.9
 revision            0
+
 categories-append   devel
 platforms           darwin
+supported_archs     noarch
 license             MIT
 maintainers         {larryv @larryv} openmaintainer
-supported_archs     noarch
 
 description         Virtual Python Environment builder
 long_description    virtualenv is a tool to create isolated Python \
                     environments.
-homepage            https://virtualenv.pypa.io
 
+homepage            https://virtualenv.pypa.io
 master_sites        pypi:v/${python.rootname}
 distname            ${python.rootname}-${version}
-checksums           rmd160  eb9cba01a74cf44d768d22d18d954272d67f93dd \
-                    sha256  984d7e607b0a5d1329425dd8845bd971b957424b5ba664729fab51ab8c11bc39 \
-                    size    3713208
 
-python.versions     27 34 35 36 37
+checksums           rmd160  1ec5152c8d82350fd24358cfa0d112fdf70e7094 \
+                    sha256  0d62c70883c0342d59c11d0ddac0d954d0431321a41ab20851facf2b222598f3 \
+                    size    5121717
+
+# keep older Python versions here, do add the EOL version to the list below
+python.versions     27 34 35 36 37 38
 
 if {${name} ne ${subport}} {
-    depends_lib-append  port:py${python.version}-setuptools
+    # add EOL warnings
+    if {${python.version} in "34"} {
+        PortGroup   deprecated 1.0
+        deprecated.eol_version  yes
+    }
 
-    depends_test-append port:py${python.version}-pytest \
-                        port:py${python.version}-mock
-    test.run            no
-    test.cmd            py.test-${python.branch}
-    test.target
-    test.env            PYTHONPATH=${worksrcpath}/build/lib
+    depends_lib-append  port:py${python.version}-setuptools
 
     depends_run-append  port:virtualenv_select
 
@@ -43,7 +45,7 @@ if {${name} ne ${subport}} {
 
     post-destroot {
         set docdir ${prefix}/share/doc/${subport}
-        xinstall -m 0755 -d ${destroot}${docdir}/docs/changelog
+        xinstall -d ${destroot}${docdir}/docs/changelog
         xinstall -m 0644 -W ${worksrcpath} README.rst LICENSE.txt AUTHORS.txt \
             ${destroot}${docdir}
         xinstall -m 0644 {*}[glob -directory ${worksrcpath}/docs *.rst] \

@@ -61,7 +61,7 @@ configure.args				--mandir='\${prefix}/share/man'						\
 							--sysconfdir='\${prefix}/etc/${name}'				\
 							--disable-sdltest
 configure.cxxflags-append	"-I${prefix}/include"
-configure.env-append		CFLAGS="-O2 -I${prefix}/include -I${prefix}/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE"
+configure.env-append		"CFLAGS=-O2 -I${prefix}/include -I${prefix}/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE"
 
 worksrcdir					${name}-${version}/src
 use_parallel_build			yes

@@ -2,9 +2,11 @@
 
 PortSystem          1.0
 PortGroup           github 1.0
+PortGroup           cxx11 1.1
+PortGroup           compiler_blacklist_versions 1.0
 
-github.setup        crystal-lang crystal 0.27.0
-revision            0
+github.setup        crystal-lang crystal 0.30.1
+revision            3
 categories          lang
 platforms           darwin
 supported_archs     x86_64
@@ -25,8 +27,8 @@ depends_lib         port:boehmgc \
                     port:libiconv \
                     port:libxml2 \
                     port:libyaml \
-                    port:llvm-6.0 \
-                    port:openssl \
+                    port:llvm-8.0 \
+                    path:lib/libssl.dylib:openssl \
                     port:pcre \
                     port:zlib
 
@@ -38,23 +40,16 @@ master_sites-append https://github.com/crystal-lang/${name}/releases/download/${
 distfiles-append    ${name}-${cr_full_ver}-${os.platform}-${build_arch}${extract.suffix}:bootstrap
 
 checksums           ${distname}${extract.suffix} \
-                    rmd160  9a3eed38c62b8a8d293f0fbf32f1fe84b8654261 \
-                    sha256  1608026ab08dfab002e98631fb56845cff2a280db578177ab010456c2a26794c \
-                    size    2026765 \
+                    rmd160  b222a9c8c56f3980cf83a9dff38d34a6b6346f3b \
+                    sha256  b1032868bbd2f41107b12e93af0975ae3908b1e348b0d609986eec0d9dca8254 \
+                    size    2153561 \
                     ${name}-${cr_full_ver}-${os.platform}-${build_arch}${extract.suffix} \
-                    rmd160  a82381f5c48d20fadf5f8a7387bfac4c04bf39a5 \
-                    sha256  f34bb10357ce5a31ed37066750ee35443ed8cf5fc3f37d3490b984a4bfb1ee51 \
-                    size    15280881
+                    rmd160  464f2ca7cda8e620f2063825011f756cbb00745c \
+                    sha256  ffc3ee9124367a2dcd76f9b4c2bf8df083ba8fce506aaf0e3c6bfad738257adc \
+                    size    17902846
 
 patchfiles          patch-compiler.diff patch-readline.diff \
                     patch-crypto.diff patch-ssl.diff patch-xml.diff
-
-if {${os.platform} eq "darwin" && ${os.major} <= 15} {
-    pre-fetch {
-        ui_error "${name} ${version} requires macOS 10.12 or greater at present."
-        return -code error "incompatible OS X version"
-    }
-}
 
 post-patch {
     reinplace "s|\"/usr/lib\", \"/usr/local/lib\"|\"${prefix}/lib\"|" \
@@ -67,7 +62,13 @@ post-patch {
 configure.cmd       env | grep -v ^PATH=
 configure.pre_args  > Makefile.local
 
-set llvm_config     LLVM_CONFIG=llvm-config-mp-6.0
+set llvm_version    8.0
+set llvm_config     LLVM_CONFIG=llvm-config-mp-${llvm_version}
+
+# Use MP's clang based on above LLVM version
+compiler.blacklist-append *gcc* clang 
+compiler.fallback   macports-clang-${llvm_version}
+compiler.whitelist  macports-clang-${llvm_version}
 
 build.args          BUILD_PATH="PATH=${workpath}/${name}-${cr_full_ver}/bin:\$PATH" \
                     CC="${configure.cc} -L${prefix}/lib" \

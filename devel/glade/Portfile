@@ -10,7 +10,7 @@ license             LGPL-2+ GPL-2+
 set branch          [join [lrange [split ${version} .] 0 1] .]
 description         Glade is a RAD tool to enable quick & easy development of user interfaces \
                     for the GTK+ 3.* toolkit and the GNOME desktop environment.
-long_description    ${description}
+long_description    {*}${description}
 maintainers         {devans @dbevans} openmaintainer
 categories          devel gnome
 platforms           darwin
@@ -78,7 +78,7 @@ variant python35 conflicts python27 python36 python37 description {Build Python 
     configure.args-replace      --disable-python --enable-python
     configure.python            ${prefix}/bin/python3.5
     set python_framework        ${frameworks_dir}/Python.framework/Versions/3.5
-    configure.env-append        PYTHON_LIBS="-L${python_framework}/lib -lpython3.5" \
+    configure.env-append        "PYTHON_LIBS=-L${python_framework}/lib -lpython3.5" \
                                 PYTHON_LIB_LOC=${python_framework}/lib
     depends_lib-append          port:py35-gobject3
     configure.pkg_config_path   ${python_framework}/lib/pkgconfig
@@ -88,7 +88,7 @@ variant python36 conflicts python27 python35 python37 description {Build Python 
     configure.args-replace      --disable-python --enable-python
     configure.python            ${prefix}/bin/python3.6
     set python_framework        ${frameworks_dir}/Python.framework/Versions/3.6
-    configure.env-append        PYTHON_LIBS="-L${python_framework}/lib -lpython3.6" \
+    configure.env-append        "PYTHON_LIBS=-L${python_framework}/lib -lpython3.6" \
                                 PYTHON_LIB_LOC=${python_framework}/lib
     depends_lib-append          port:py36-gobject3
     configure.pkg_config_path   ${python_framework}/lib/pkgconfig
@@ -98,7 +98,7 @@ variant python37 conflicts python27 python35 python36 description {Build Python 
     configure.args-replace      --disable-python --enable-python
     configure.python            ${prefix}/bin/python3.7
     set python_framework        ${frameworks_dir}/Python.framework/Versions/3.7
-    configure.env-append        PYTHON_LIBS="-L${python_framework}/lib -lpython3.7" \
+    configure.env-append        "PYTHON_LIBS=-L${python_framework}/lib -lpython3.7" \
                                 PYTHON_LIB_LOC=${python_framework}/lib
     depends_lib-append          port:py37-gobject3
     configure.pkg_config_path   ${python_framework}/lib/pkgconfig

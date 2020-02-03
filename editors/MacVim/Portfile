@@ -3,7 +3,7 @@ PortGroup           github 1.0
 PortGroup           compiler_blacklist_versions 1.0
 
 set vim_version     8.1
-set snapshot        153
+set snapshot        161
 github.setup        macvim-dev macvim ${snapshot} snapshot-
 name                MacVim
 version             ${vim_version}.snapshot${snapshot}
@@ -19,9 +19,9 @@ long_description \
 
 homepage            https://macvim-dev.github.io/macvim/
 
-checksums           rmd160  aaa534532c11d211d83612d77e7afefe88bff77a \
-                    sha256  857fcc96e9e8042c8610a1f97a2a6c0ea1d10a892e781a0b47174e90817326f0 \
-                    size    20250777
+checksums           rmd160  25adc7f380af17101948b2d6fc39e347672c3383 \
+                    sha256  bbc220da67525d1bc4732c8c0689ef04dc1f39603acf1530c6938aca049f3017 \
+                    size    21198775
 
 depends_lib         port:ncurses \
                     port:gettext \
@@ -58,6 +58,8 @@ post-patch {
     }
 }
 
+use_xcode yes
+
 autoconf.cmd make autoconf
 autoconf.pre_args
 autoconf.args
@@ -77,7 +79,7 @@ build.args          XCODEFLAGS="CACHE_ROOT=${workpath}/caches"
 
 # this port does not build with the new xcode build system at present
 if {[vercmp ${xcodeversion} 10.0] >= 0} {
-    build.args    XCODEFLAGS="CACHE_ROOT=${workpath}/caches -UseNewBuildSystem=NO"
+    build.args    XCODEFLAGS="CACHE_ROOT=${workpath}/caches -UseNewBuildSystem=NO MACOSX_DEPLOYMENT_TARGET=${macosx_deployment_target}"
 }
 
 destroot {

@@ -4,10 +4,11 @@ PortSystem              1.0
 PortGroup               qmake 1.0
 
 name                    tea
-version                 47.0.1
-checksums               rmd160  2c1885ba7c1a514119ac66c52134884fe675aa21 \
-                        sha256  5fb5c22023edd26ed8d0708a737df2cfdb2a88abe546e2e6f020acfe19d3e764 \
-                        size    437274
+version                 49.0.0
+revision                0
+checksums               rmd160  90afbe5a2e8f04c63cfdd8c1da5f78ee6be25c63 \
+                        sha256  fdbdad5f03cfa19dd2144919cf0b1e7cba46b88af18440513a4fc8e2a5c3a7cb \
+                        size    438018
 
 description             TEA is the powerful text editor for GNU/Linux and *BSD.
 long_description        ${description}

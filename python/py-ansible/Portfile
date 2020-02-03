@@ -5,23 +5,23 @@ PortGroup           python 1.0
 PortGroup           select 1.0
 
 name                py-ansible
-version             2.7.8
+version             2.9.2
 license             GPL-3+
 
 categories-append   sysutils
 platforms           darwin
 supported_archs     noarch
 
-maintainers         {adfernandes @adfernandes} {blair @blair} {gmail.com:pedro.salgado @steenzout}
+maintainers         {adfernandes @adfernandes} {gmail.com:pedro.salgado @steenzout} openmaintainer
 
 master_sites        pypi:a/ansible
 homepage            https://github.com/ansible/ansible
 description         SSH-based configuration management and deployment system
 
 distname            ansible-${version}
-checksums           rmd160  09335c2a2ce6e2fbf1f5d51c4c2966c60410e90c \
-                    sha256  3d67db258b492f3c8828c68dcb92438e67cb5b20c12924089eafdc0ada3edd87 \
-                    size    11812884
+checksums           rmd160  b906eb46a19d61abeff8a841e6f8721040e890ef \
+                    sha256  2f83f8ccc50640aa41a24f6e7757ac06b0ee6189fdcaacab68851771d3b42f3a \
+                    size    14157188
 
 conflicts           ansible
 

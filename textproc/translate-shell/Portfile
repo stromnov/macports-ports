@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        soimort translate-shell 0.9.6.9 v
+github.setup        soimort translate-shell 0.9.6.11 v
 categories          textproc
 maintainers         nomaintainer
 supported_archs     noarch
@@ -17,9 +17,9 @@ license             public-domain
 
 homepage            http://www.soimort.org/translate-shell/
 
-checksums           rmd160  e1bde65e99219f3b5b1749040de3efa6e2b26747 \
-                    sha256  68d35871fef615d3ced4212da64fdc9d51eda994125ed2dce2f9fe4af4beea7f \
-                    size    74221
+checksums           rmd160  3c212fca6cf51cf68633e45f046e9ad39f368f76 \
+                    sha256  d19d90bafc40b32acf97f96d9ebe14048b472148992572c4706de1763932e7ff \
+                    size    76770
 
 depends_build       port:gawk
 

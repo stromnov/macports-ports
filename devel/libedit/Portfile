@@ -2,10 +2,11 @@
 
 PortSystem          1.0
 PortGroup           muniversal 1.0
+PortGroup           clang_dependency 1.0
 
 name                libedit
 epoch               20090923
-version             20181209-3.1
+version             20191231-3.1
 categories          devel
 platforms           darwin
 license             BSD
@@ -16,15 +17,20 @@ long_description    libedit is a command line editing and history library. \
                     It is designed to be used by interactive programs that \
                     allow the user to type commands at a terminal prompt.
 
-homepage            http://thrysoee.dk/editline/
+homepage            https://thrysoee.dk/editline/
 master_sites        ${homepage} \
                     http://download.openpkg.org/components/cache/libedit/
 
-checksums           rmd160  7171331f50310f8387cfb26188bdcb61aa2435c2 \
-                    sha256  2811d70c0b000f2ca91b7cb1a37203134441743c4fcc9c37b0b687f328611064 \
-                    size    521931
+checksums           rmd160  a0e32d4bbb896b6f7e6567902e4205f2e435cd26 \
+                    sha256  dbb82cb7e116a5f8025d35ef5b4f7d4a3cdd0a3909a146a39112095a2d229071 \
+                    size    516801
 
 depends_lib         port:ncurses
+
+if {${os.platform} eq "darwin" && ${os.major} < 11 && ${cxx_stdlib} eq "libc++"} {
+    # This port is required by clang 3.7 and later
+    clang_dependency.extra_versions 3.7
+}
 
 # rename man files to avoid conflict with readline
 # see https://trac.macports.org/ticket/51891

@@ -1,9 +1,10 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           java 1.0
 
 name                Okapi
-version             0.36
+version             0.38
 categories          aqua textproc java
 license             Apache-2
 maintainers         {amake @amake} openmaintainer
@@ -18,18 +19,19 @@ supported_archs     noarch
 distname            okapi-apps_cocoa-macosx-x86_64_${version}
 master_sites        https://dl.bintray.com/okapi/Distribution/
 
-checksums           rmd160  665a8506e427cdb1ffc917e0b9592e7fbfaf3de3 \
-                    sha256  268d64f445998ba9f8e53493fc1a7f5cfdcf40fb331777a80e6f2f20d65f2723 \
-                    size    34944084
+checksums           rmd160  31a46c84593d02fb6781aa898bdf3b0e5dd71541 \
+                    sha256  b2cb0a636604c9ad1b89858eafabee40884ea8bb04302a8d80a54027bc300ed2 \
+                    size    38157094
 
 use_dmg             yes
 use_configure       no
 
-depends_run         bin:java:kaffe
+java.version        1.8+
+java.fallback       openjdk8
 
-build.cmd           true
+build {}
 
-destroot    {
+destroot {
     set okapi_home ${applications_dir}/${name}
     copy ${worksrcpath}/${name}_${version} ${destroot}${okapi_home}
 

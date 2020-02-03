@@ -8,15 +8,15 @@ PortGroup               compiler_blacklist_versions 1.0
 # Check filenames in https://download.owncloud.com/desktop/stable/
 # owncloudclient-${version}.${build_id}.tar.xz (The source tarball)
 # ownCloud-${version}.${version_id}.pkg.tbz (The official macOS package)
-set build_id 11383
-set version_id 11198
-
 name                    owncloud-client
-version                 2.5.2
+version                 2.6.0
 revision                0
-checksums               rmd160  a4e0d26f1ea3d29ef997a52f5142c2426ca8557b \
-                        sha256  abc6134115d7ee90cd95de794ecc6cf1edea696b050b138714d6b233781c3ebf \
-                        size    16714124
+set build_id            13018
+set version_id          12703
+
+checksums               rmd160  2e4a5f8760e716b41e06adb242c2acd3468bdd6c \
+                        sha256  e78e3286bccfac12fdc24d78fb60f760529d21b71846099fc762a8762b271f36 \
+                        size    17311396
 
 categories              www aqua
 maintainers             {mps @Schamschula} openmaintainer
@@ -32,6 +32,8 @@ master_sites            https://download.owncloud.com/desktop/stable
 distname                owncloudclient-${version}.${build_id}
 use_xz                  yes
 
+use_xcode               yes
+
 platforms               darwin
 
 compiler.cpath
@@ -39,7 +41,7 @@ compiler.library_path
 
 # For -fstack-protector-strong; copied from Portfile of KeePassXC
 compiler.blacklist-append {clang < 602} macports-clang-3.4 macports-clang-3.3
-compiler.fallback-append macports-clang-5.0 macports-clang-4.0 macports-clang-3.9
+compiler.fallback-append macports-clang-5.0
 
 depends_build-append    port:doxygen
 

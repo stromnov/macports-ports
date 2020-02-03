@@ -6,10 +6,10 @@ PortGroup               bitbucket 1.0
 
 epoch                   20130201
 
-bitbucket.setup         durin42 hg-git 8d00fde45adbc6c3c0ccab8e362b5f5c36c171e6
+bitbucket.setup         durin42 hg-git aa15905ca87fd1e13c60684ff40ccde026cd7dd0
 name                    py-hggit
-version                 0.8.12
-revision                1
+version                 0.8.12-git-20190807
+revision                0
 
 categories-append       devel
 license                 GPL-2
@@ -25,9 +25,9 @@ long_description        This is the Hg-Git plugin for Mercurial, adding the abil
                         or use a Git server as a collaboration point for a team with \
                         developers using both Git and Mercurial.
 
-checksums               rmd160  610e35c34231f728e198ea4161de26b1e9e4a61c \
-                        sha256  2cca8042dd5dabccb91a1a34c11b3b2d8cc1d2f64ccd8b0e8f775795d3db6e09 \
-                        size    137713
+checksums               rmd160  d78cb278f0902a8d3e7d1718eacc99e9124be479 \
+                        sha256  17b8c8b23834f456ab577d7a3ef436e9b295a5586132b5594713f64820eb26e1 \
+                        size    136809
 
 # can't set python.versions before adding custom subports
 subport py-hggit-devel {}

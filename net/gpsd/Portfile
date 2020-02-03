@@ -3,9 +3,10 @@
 PortSystem              1.0
 
 name                    gpsd
-
-license                 BSD
+version                 3.20
+revision                0
 categories              net
+license                 BSD
 maintainers             {michaelld @michaelld} \
                         {fwright.net:fw @fhgwright} openmaintainer
 platforms               darwin
@@ -19,61 +20,21 @@ long_description        GPSD is a service daemon that handles GPSes and other \
                         includes a number of clients which can be run against \
                         a local GPSD or a GPSD on another machine.
 
-homepage                http://www.catb.org/${name}/
+homepage                https://gpsd.io
 
-subport gpsd-devel {}
+master_sites            savannah
+checksums               rmd160  a87ed286b4a42092de54986889f0253990163d7e \
+                        sha256  172a7805068eacb815a3c5225436fcb0be46e7e49a5001a94034eac43df85e50 \
+                        size    3600835
 
-if {${subport} eq ${name}} {
+livecheck.type          regex
+livecheck.url           https://download.savannah.gnu.org/releases/gpsd/
+livecheck.regex         "${name}-(\\d+(?:\\.\\d+)*)${extract.suffix}"
 
-    # release
-    conflicts           gpsd-devel
-
-    version             3.18.1
-    checksums           rmd160  08f95b51218f11f7b07c1a5046cead366216fdc8 \
-                        sha256  5cb1e6d880ec9a52c62492dd0e3d77451b7c7ad625895bd652f6354215aec23e \
-                        size    9031595
-    revision            0
-
-    master_sites        savannah
-
-    # NOTE: The 3.18.1 tarball doesn't quite match the release-3.18.1 sources.
-    # This due to a recurring problem clobbering the 'gps' symlinks in the
-    # contrib/ and devtools/.  Since this doesn't affect the installed port,
-    # these errors are left as is.  Note, however, that attempts to directly
-    # use Python programs in these subdirectories from the work directory
-    # may not work.
-
-    patchfiles-append   patch-SConstruct.diff
-    patchfiles-append   patch-noC99.diff
-    patchfiles-append   patch-pyserial.diff
-
-    livecheck.type          regex
-    livecheck.url           https://download.savannah.gnu.org/releases/gpsd/
-    livecheck.regex         "${name}-(\\d+(?:\\.\\d+)*)${extract.suffix}"
-
-} else {
-
-    # devel
-    conflicts           gpsd
-
-    revision            0
-    version             20190308
-    set commit          08c8eda1f63c2feaf66146986190c4e689b6bf61
-    checksums           rmd160 73d61b2b4a13a4d53a1dcd9ded461dee8ed4fbf0 \
-                        sha256 8c58b112e5e85d6a692dd28750a2d8ae7d9deaae3f3545bc09d0337f74f9597f \
-                        size   10119312
-
-    master_sites        http://git.savannah.gnu.org/cgit/gpsd.git/snapshot
-    distname            ${name}-${commit}
-
-    livecheck.type          regex
-    livecheck.version       ${commit}
-    livecheck.url           http://git.savannah.gnu.org/cgit/gpsd.git
-    livecheck.regex         "id=(\[0-9a-f\]*)'>HEAD"
-}
 
 # GPSD requires Python 2.6, 2.7, or 3.2+; don't use 2.6, 3.2, or
 # 3.3, since we're weaning MP off of them.
+# Some programs currently have issues with Python 3.8, so omit that for now.
 
 set pythons_suffixes {27 34 35 36 37}
 
@@ -113,9 +74,43 @@ return -code error "Invalid Python variant selection"
 
 set pyver_dotted [join [split ${pyver_no_dot} ""] .]
 
+# KLUDGE: GPSD currently expects the Python extensions to build with the same
+# C compiler as was used to build Python itself.  This causes build failures
+# when the "Python C compiler" and the compiler chosen for GPSD have
+# configuration incompatibilities (or if the "Python C compiler" is absent).
+# Until this is fixed in GPSD upstream, some fiddling with compiler selection
+# is needed here.  This is especially kludgy since it requires knowledge of
+# how the Python port chooses the compiler.
+#
+# At the moment, the known failing case is when building with +python27
+# (the default) on 10.6, but here we just copy the condition from the python27
+# Portfile.  However, unlike the latter, we don't include the clang_dependency
+# portgroup outside the conditional, since it's not known to be needed in such
+# cases, and its mere presence alters the compiler selection.
+
+if {[variant_isset python27]} {
+    # Code copied (approximately) from python27 Portfile
+    if {${os.platform} eq "darwin" && ${os.major} < 11 && ${cxx_stdlib} eq "libc++"} {
+        PortGroup           clang_dependency 1.0
+
+        clang_dependency.extra_versions 3.7
+    }
+}
+
+# KLUDGE: Another problem is that the hack to avoid the daemon() deprecation
+# warning causes clang-9.0++ to choke when targeting 10.6.  The relevant code
+# shouldn't really be built as C++ at all, but until that's fixed, we avoid
+# the problem by blacklisting clang-9.0 with +qt on OSX <10.7.
+
+if {[variant_isset qt]} {
+    if {${os.platform} eq "darwin" && ${os.major} < 11} {
+        compiler.blacklist-append macports-clang-9.0
+    }
+}
+
 # NOTE:  All Python dependencies which are conceptually depends_run actually
 # need to be depends_lib, since the build procedure references them, usually
-# just to verify theire existence.
+# just to verify their existence.
 
 depends_lib-append      port:python${pyver_no_dot} \
                         port:py${pyver_no_dot}-serial
@@ -126,6 +121,7 @@ depends_lib-append      port:ncurses
 depends_build-append    port:scons port:pkgconfig
 
 use_configure           no
+use_xcode               yes
 
 set cxx_stdlibflags {}
 if {[string match *clang* ${configure.cxx}]} {
@@ -141,11 +137,11 @@ build.args              prefix=${prefix} \
                         strip=no \
                         dbus_export=no \
                         xgps=no
-build.env-append        CC="${configure.cc} [get_canonical_archflags cc]" \
-                        CFLAGS="${configure.cflags}" \
-                        CXX="${configure.cxx} [get_canonical_archflags cxx] ${cxx_stdlibflags}" \
-                        CXXFLAGS="${configure.cxxflags}" \
-                        LDFLAGS="${configure.ldflags}"
+build.env-append        "CC=${configure.cc} [get_canonical_archflags cc]" \
+                        CFLAGS=${configure.cflags} \
+                        "CXX=${configure.cxx} [get_canonical_archflags cxx] ${cxx_stdlibflags}" \
+                        CXXFLAGS=${configure.cxxflags} \
+                        LDFLAGS=${configure.ldflags}
 
 # Allow the regression tests to be run via "port test gpsd".
 #
@@ -200,11 +196,6 @@ post-destroot {
 variant qt description {Build Qt4 bindings} {
     PortGroup               qt4 1.0
 
-    # The following three lines are a workaround for #50347
-    build.env-append        PKG_CONFIG_PATH=${qt_pkg_config_dir}
-    test.env-append         PKG_CONFIG_PATH=${qt_pkg_config_dir}
-    destroot.env-append     PKG_CONFIG_PATH=${qt_pkg_config_dir}
-
     build.args-replace      qt=no           qt=yes
     test.args-replace       qt=no           qt=yes
     destroot.args-replace   qt=no           qt=yes
@@ -212,7 +203,7 @@ variant qt description {Build Qt4 bindings} {
 
 variant libusb \
 description {Include support for better USB device discovery} {
-    depends_lib-append      port:libusb
+    depends_lib-append      path:lib/libusb-1.0.dylib:libusb
 
     build.args-replace      usb=no          usb=yes
     test.args-replace       usb=no          usb=yes
@@ -240,4 +231,21 @@ description {Include xgps/xgpsspeed X11 clients (dependency-intensive)} {
 
 if {![variant_isset xgps]} {
     notes "The xgps variant is now needed to get the xgps and xgpsspeed programs."
+}
+
+
+# The gpsd-devel subport is obsolete as of 04-Jan-2020.
+# Handle it last so that it can override the dependencies.
+
+subport gpsd-devel {
+
+    PortGroup           obsolete 1.0
+
+    # Copy last pre-obsolete version, with revbump
+    git.branch          a4ecde71556018f6d7a70831165169fffd0cc3a1
+    version             20190817-[string range ${git.branch} 0 7]
+    revision            1
+
+    replaced_by         gpsd
+
 }

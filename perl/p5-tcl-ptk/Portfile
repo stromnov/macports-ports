@@ -3,8 +3,8 @@
 PortSystem          1.0
 PortGroup           perl5 1.0
 
-perl5.branches      5.26 5.28
-perl5.setup         Tcl-pTk 0.95
+perl5.branches      5.26 5.28 5.30
+perl5.setup         Tcl-pTk 1.02
 
 platforms           darwin
 maintainers         {@chrstphrchvz gmx.us:chrischavez} openmaintainer
@@ -12,7 +12,7 @@ license             {Artistic-1 GPL}
 
 supported_archs     noarch
 
-description         Tcl::pTk - Interface to Tcl/Tk with Perl/Tk compatible sytax
+description         Tcl::pTk - Interface to Tcl/Tk with Perl/Tk compatible syntax
 
 long_description    Tcl::pTk interfaces perl to an existing Tcl/Tk \
                     installation on your computer. It has fully perl/tk \
@@ -25,9 +25,9 @@ long_description    Tcl::pTk interfaces perl to an existing Tcl/Tk \
                     features (for example native-looking widgets using the \
                     Tile package).\n
 
-checksums           rmd160  07d817eac5282ed9649d5e663defd4f3320af40b \
-                    sha256  623264328ded9ded341cfdaa072a21e39eb9b1d1a3629e426b03375ec61b6d3d \
-                    size    539433
+checksums           rmd160  b4da7e43be2cf83eec61b615d86e97740c19cf20 \
+                    sha256  4b85eb48e036c4bb8bfeb93da968f69fa684cc8c5e990f8f7d33bf8141646b0c \
+                    size    540855
 
 if {${perl5.major} != ""} {
     depends_lib-append \

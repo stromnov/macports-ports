@@ -4,14 +4,12 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-control
-version             0.8.1
+version             0.8.3
 revision            0
+
 categories-append   science
 license             BSD
 platforms           darwin
-
-python.versions     27 34 35 36 37
-
 maintainers         nomaintainer
 
 description         Python package for feedback control systems
@@ -20,14 +18,13 @@ long_description    \
     implements basic operations for analysis and design of feedback control \
     systems.
 
-homepage            https://python-control.sourceforge.net
-master_sites        pypi:c/${python.rootname}/
+homepage            https://python-control.readthedocs.io
 
-distname            ${python.rootname}-${version}
+checksums           rmd160  b5739feb6a43755bdd889c87c42dd31f95edbc3a \
+                    sha256  1fcfdcf39f96523cb1f2cf7bf7b8ae68ec3ef8350e5c55e17e02afdb0872edbb \
+                    size    249610
 
-checksums           rmd160  999a70fe5c0d8d04335d8ade089f280a58c4285f \
-                    sha256  d01d6dc14888bdfef6878b3e995a4b2b16bc021447291a9b740a9ab0983d34c9 \
-                    size    168701
+python.versions     27 35 36 37 38
 
 if {${name} ne ${subport}} {
     depends_build-append \
@@ -40,11 +37,11 @@ if {${name} ne ${subport}} {
 
     depends_test-append \
                     port:py${python.version}-nose
+
     test.run        yes
-    test.cmd        ${python.bin} setup.py
 
     post-destroot {
-        xinstall -m 0755 -d ${destroot}${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${prefix}/share/doc/${subport}
         xinstall -m 0644 -W ${worksrcpath} ChangeLog LICENSE Pending \
             README.rst ${destroot}${prefix}/share/doc/${subport}
         xinstall -m 0644 {*}[glob ${worksrcpath}/examples/*] \

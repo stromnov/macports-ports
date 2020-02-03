@@ -3,27 +3,30 @@
 PortSystem          1.0
 PortGroup           github 1.0
 PortGroup           xcodeversion 1.0
+use_xcode           yes
 
-if {[vercmp ${os.version} 17.0.0] < 0} {
+if {${os.major} > 16} {
+    version             3.3.7
+    revision            0
+    checksums \
+        rmd160  f4084341393387e534de7de441ed7e5eee60a18b \
+        sha256  aaf44f31555a54dcdc694a6963951f80427b818682d8131d941fcf4c61845898 \
+        size    18948613
+    patchfiles          patch-Makefile-XC10.diff
+} else {
     version             3.2.0
+    revision            0
     checksums \
         rmd160  07915ff5db0545c0c059f47e7f71761e023a26e1 \
         sha256  017aff348352369abcc994caaca0f6112e1f17c4d65041acdb9f19830b2b96bd \
         size    11969144
     patchfiles          patch-Makefile.diff
-} else {
-    version             3.2.7
-    checksums \
-        rmd160  82b3f206a23189319281c2512b456bb00a498b4d \
-        sha256  e798eb994638c30d8500b0f085c3edaf4bc51066b47df8f85153a9ec1275972f \
-        size    11849614
-    patchfiles          patch-Makefile-XC10.diff
 }
 
 github.setup        gnachman iTerm2 ${version} v
 categories          aqua shells
 platforms           darwin
-maintainers         {emer.net:emer @markemer} openmaintainer
+maintainers         {mark @markemer} openmaintainer
 license             GPL-2+
 supported_archs     x86_64
 

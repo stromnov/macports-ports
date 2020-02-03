@@ -7,7 +7,7 @@ epoch               20181026
 version             5.3.0
 categories          math science
 platforms           darwin
-maintainers         {michaelld @michaelld} openmaintainer
+maintainers         nomaintainer
 license             none
 
 description         Sparse matrix routines
@@ -100,12 +100,12 @@ subport	SuiteSparse_CHOLMOD {
     depends_lib-append port:SuiteSparse_config port:SuiteSparse_AMD port:SuiteSparse_CAMD port:SuiteSparse_COLAMD port:SuiteSparse_CCOLAMD
     depends_lib-append port:metis
     configure.env-append \
-        MY_METIS_LIB='-L${prefix}/lib -lmetis' \
-        MY_METIS_INC='${prefix}/include'
+        "MY_METIS_LIB=-L${prefix}/lib -lmetis" \
+        MY_METIS_INC=${prefix}/include
     pre-configure {
         configure.env-append \
-            BLAS='-L${prefix}/lib ${linalglib}' \
-            LAPACK='-L${prefix}/lib ${linalglib}'
+            "BLAS=-L${prefix}/lib ${linalglib}" \
+            "LAPACK=-L${prefix}/lib ${linalglib}"
     }
     license LGPL-2.1+
     long_description-append ${subport}: sparse Cholesky factorization.
@@ -147,8 +147,8 @@ subport	SuiteSparse_UMFPACK {
     depends_lib-append port:SuiteSparse_config port:SuiteSparse_AMD port:SuiteSparse_CHOLMOD
     pre-configure {
         configure.env-append \
-            BLAS='-L${prefix}/lib ${linalglib}' \
-            LAPACK='-L${prefix}/lib ${linalglib}'
+            "BLAS=-L${prefix}/lib ${linalglib}" \
+            "LAPACK=-L${prefix}/lib ${linalglib}"
     }
     license GPL-2+
     long_description-append ${subport}: sparse LU factorization.
@@ -169,8 +169,8 @@ subport	SuiteSparse_SPQR {
     depends_lib-append port:SuiteSparse_config port:SuiteSparse_AMD port:SuiteSparse_CHOLMOD port:SuiteSparse_COLAMD
     pre-configure {
         configure.env-append \
-            BLAS='-L${prefix}/lib ${linalglib}' \
-            LAPACK='-L${prefix}/lib ${linalglib}'
+            "BLAS=-L${prefix}/lib ${linalglib}" \
+            "LAPACK=-L${prefix}/lib ${linalglib}"
     }
     license GPL-2+
     long_description-append ${subport}: sparse QR factorization.
@@ -247,7 +247,7 @@ if {${subport} eq ${name}} {
         configure.universal_cxxflags
         configure.cxx_archflags
         pre-configure {
-            configure.env-append TARGET_ARCH='[get_canonical_archflags ld]'
+            configure.env-append TARGET_ARCH=[get_canonical_archflags ld]
         }
 
         configure.cmd       printenv

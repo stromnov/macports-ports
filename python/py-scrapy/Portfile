@@ -4,7 +4,8 @@ PortSystem              1.0
 PortGroup               python 1.0
 
 name                    py-scrapy
-version                 1.5.1
+# version 1.8+ requires py-protego which not in macports
+version                 1.7.3
 # epoch needed due to previous downgrading version
 epoch                   1
 maintainers             {khindenburg @kurthindenburg} openmaintainer
@@ -21,12 +22,12 @@ homepage                https://pypi.python.org/pypi/Scrapy
 distname                Scrapy-${version}
 master_sites            https://files.pythonhosted.org/packages/source/S/Scrapy/
 
-checksums               rmd160  19234b618ae8dd5850126e56c93013d6e102524d \
-                        sha256  5a398bf6818f87dcc817c919408a195f19ba46414ae12f259119336cfa862bb6 \
-                        size    908961
+checksums               rmd160  ebe54257cfa20c6bc28995ecf6926a9b5c029ed8 \
+                        sha256  fe5a40177960e97d42d1c752a73edb40f76a85a24076dec8535cffa499eb08c8 \
+                        size    951640
 
-python.versions 27 35 36
-python.default_version 27
+python.versions 27 35 36 37
+python.default_version 37
 
 if {${name} ne ${subport}} {
     depends_build-append    port:py${python.version}-setuptools

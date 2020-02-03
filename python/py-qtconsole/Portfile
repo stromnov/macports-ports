@@ -4,38 +4,48 @@ PortSystem          1.0
 PortGroup           python 1.0
 
 name                py-qtconsole
-version             4.4.3
+version             4.6.0
 revision            0
+
 categories-append   devel
 platforms           darwin
 license             BSD
 supported_archs     noarch
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37 38
 
 maintainers         {stromnov @stromnov} openmaintainer
 
-description         Jupyter Qt console.
+description         Jupyter QtConsole
 long_description    ${description}
 
-homepage            http://jupyter.org
+homepage            https://jupyter.org
 master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 
 distname            ${python.rootname}-${version}
 
-checksums           rmd160  be0712b3c59ffce37c19cda1ddaf00e00757da2f \
-                    sha256  bc1ba15f50c29ed50f1268ad823bb6543be263c18dd093b80495e9df63b003ac \
-                    size    419927
+checksums           rmd160  36b4a57f9a121e4b13ca36a00fa69e5965b7aa0e \
+                    sha256  654f423662e7dfe6a9b26fac8ec76aedcf742c339909ac49f1f0c1a1b744bcd1 \
+                    size    426936
 
 if {${name} ne ${subport}} {
-    depends_lib-append  port:py${python.version}-traitlets \
+    depends_lib-append  port:py${python.version}-setuptools \
+                        port:py${python.version}-traitlets \
+                        port:py${python.version}-ipython_genutils \
                         port:py${python.version}-jupyter_core \
                         port:py${python.version}-jupyter_client \
                         port:py${python.version}-pygments \
                         port:py${python.version}-ipykernel
 
     # Note: depends on one of py-pyqt4, py-pyqt5 or py-pyside (first available at runtime)
-    # TODO: add notes or specify default variant
+    notes-append        "Please do not forget to install one of Qt backends: py${python.version}-pyside, py${python.version}-pyqt5 or py${python.version}-pyqt4."
+
+    post-destroot {
+        set docdir ${prefix}/share/doc/${subport}
+        xinstall -d ${destroot}${docdir}
+        xinstall -m 0644 -W ${worksrcpath} CONTRIBUTING.md LICENSE \
+            README.md ${destroot}${docdir}
+    }
 
     livecheck.type      none
 }

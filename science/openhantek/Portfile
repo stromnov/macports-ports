@@ -1,0 +1,45 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:filetype=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+PortGroup           github 1.0
+PortGroup           qt5 1.0
+PortGroup           app 1.0
+
+github.setup        OpenHantek OpenHantek6022 3.0.1
+checksums           rmd160 a07dbfa35c8912b799c91f99ef11dbe6df51d378 \
+                    sha256 b69c7cc335f5ec10d49e241cfbe839e6ac4c3aa6c9433b0ae36a33941550ef64 \
+                    size   20150030
+revision            0
+
+name                openhantek
+platforms           darwin macosx
+categories          science
+license             GPL-3.0
+maintainers         {@ra1nb0w irh.it:rainbow} openmaintainer
+
+description         DSO software for Hantek USB digital signal oscilloscopes
+long_description    OpenHantek is a free software for Hantek and compatible \
+    (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes
+
+depends_lib-append \
+    path:lib/libusb.dylib:libusb \
+    port:fftw-3
+
+qt5.depends_component \
+    qttools
+
+compiler.cxx_standard \
+    2011
+
+configure.args-append \
+    -DBUILD_MACOSX_BUNDLE=NO
+
+app.create yes
+app.name OpenHantek
+app.executable OpenHantek
+app.icon openhantek/res/images/openhantek.icns
+app.retina yes
+
+test.run yes
+test.cmd ${cmake.build_dir}/openhantek/OpenHantek -v

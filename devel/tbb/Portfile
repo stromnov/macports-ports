@@ -5,8 +5,9 @@ PortGroup           muniversal 1.0
 PortGroup           github 1.0
 PortGroup           compiler_blacklist_versions 1.0
 
-github.setup        01org tbb 2019_U4
+github.setup        intel tbb 2020.1 v
 revision            0
+
 categories          devel
 platforms           darwin
 maintainers         nomaintainer
@@ -15,24 +16,21 @@ license             Apache-2
 description         Intel Threading Building Blocks offers a rich and complete approach \
                     to parallelism in C++
 
-long_description    ${description} \
+long_description    {*}${description} \
                     It represents a higher-level, task-based parallelism that abstracts \
                     platform details and threading mechanisms for scalability and performance
 
 homepage            https://www.threadingbuildingblocks.org/
 
-checksums           rmd160  fa46cc36dcd59b4a4ad4e981895cbc1adfd54eac \
-                    sha256  6c1b62468b971328bdd51a813533faa7a81352daa9c437443850b16b651a3cb8 \
-                    size    2553499
-
-github.livecheck.regex {(\d+(?:\_U)+(?:\d+)*)}
+checksums           rmd160  2bc46c69eba6d5bcdd5416b8816cefe8c46f443f \
+                    sha256  adaf8bdd79c280961527a7774216a1be583bda27af821c80de91920823cc93f9 \
+                    size    2639317
 
 use_configure       no
 
 # Force a compatible compiler
 compiler.blacklist-append *gcc* {clang < 602} macports-clang-3.3 macports-clang-3.4 \
                           macports-clang-3.7
-compiler.whitelist clang macports-clang-5.0 macports-clang-3.9
 
 set tbb_arch(i386)      ia32
 set tbb_arch(ppc)       ppc32

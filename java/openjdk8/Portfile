@@ -3,28 +3,35 @@
 PortSystem       1.0
 
 name             openjdk8
-version          8u202
+version          8u242
 revision         0
 
 set build        08
 set major        8
 
-subport openjdk8-openj9 {
-    version      8u202
-    revision     1
+subport openjdk8-graalvm {
+    version      19.3.1
+    revision     0
 
-    set build    08
     set major    8
-    set openj9_version 0.12.1
 }
 
-subport openjdk8-openj9-large-heap {
-    version      8u202
+subport openjdk8-openj9 {
+    version      8u242
     revision     0
 
     set build    08
     set major    8
-    set openj9_version 0.12.1
+    set openj9_version 0.18.1
+}
+
+subport openjdk8-openj9-large-heap {
+    version      8u242
+    revision     0
+
+    set build    08
+    set major    8
+    set openj9_version 0.18.1
 }
 
 subport openjdk10 {
@@ -36,29 +43,88 @@ subport openjdk10 {
 }
 
 subport openjdk11 {
-    version      11.0.2
-    revision     1
+    version      11.0.6
+    revision     0
 
-    set build    9
+    set build    10
+    set major    11
+}
+
+subport openjdk11-graalvm {
+    version      19.3.1
+    revision     0
+
     set major    11
 }
 
 subport openjdk11-openj9 {
-    version      11.0.2
+    version      11.0.6
     revision     1
 
-    set build    9
+    set build    10
     set major    11
-    set openj9_version 0.12.1
+    set openj9_version 0.18.1
 }
 
 subport openjdk11-openj9-large-heap {
-    version      11.0.2
+    version      11.0.6
+    revision     1
+
+    set build    10
+    set major    11
+    set openj9_version 0.18.1
+}
+
+subport openjdk12 {
+    version      12.0.2
     revision     0
 
-    set build    9
-    set major    11
-    set openj9_version 0.12.1
+    set build    10
+    set major    12
+}
+
+subport openjdk12-openj9 {
+    version      12.0.2
+    revision     0
+
+    set build    10
+    set major    12
+    set openj9_version 0.15.1
+}
+
+subport openjdk12-openj9-large-heap {
+    version      12.0.2
+    revision     0
+
+    set build    10
+    set major    12
+    set openj9_version 0.15.1
+}
+
+subport openjdk13 {
+    version      13.0.2
+    revision     0
+
+    set build    8
+    set major    13
+}
+
+subport openjdk13-openj9 {
+    version      13.0.2
+    revision     0
+
+    set build    8
+    set major    13
+    set openj9_version 0.18.0
+}
+
+subport openjdk13-openj9-large-heap {
+    version      13.0.2
+    revision     0
+
+    set build    8
+    set major    13
+    set openj9_version 0.18.0
 }
 
 categories       java devel
@@ -88,21 +154,35 @@ if {${subport} eq "openjdk8"} {
 if {${subport} eq "openjdk8"} {
     master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk${version}-b${build}/
     
-    checksums    rmd160  5b31b2248693d5ad51d4930fb646e384aa84f84d \
-                 sha256  35e8f9b18f6c7b627dba13a4c6f45e6266552ccd7156043d92391443db0d60d6 \
-                 size    101955034
+    checksums    rmd160  8127d78a0a6455d7a5cbb1e2de5b498389678a6a \
+                 sha256  06675b7d65bce0313ee1f2e888dd44267e8afeced75e0b39b5ad1f5fdff54e0b \
+                 size    102535673
 
     distname     OpenJDK${major}U-jdk_x64_mac_hotspot_${version}b${build}
     worksrcdir   jdk${version}-b${build}
 
     configure.cxx_stdlib libstdc++
+} elseif {${subport} eq "openjdk8-graalvm"} {
+    master_sites https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${version}/
+    distname     graalvm-ce-java${major}-darwin-amd64-${version}
+    worksrcdir   graalvm-ce-java${major}-${version}
 
+    checksums    rmd160  8869ada9ed3e7a787dbdaf4653524ba713383405 \
+                 sha256  eba3765174f0279ae2dc57c84fc0eb324da778dbfdcc03c6fa8381fe3728aef9 \
+                 size    357777334
+
+    description  GraalVM Community Edition based on OpenJDK ${major}
+    long_description GraalVM is a universal virtual machine for running applications written in JavaScript, Python, \
+                 Ruby, R, JVM-based languages like Java, Scala, Groovy, Kotlin, Clojure, and LLVM-based languages \
+                 such as C and C++.
+
+    homepage     https://www.graalvm.org
 } elseif {${subport} eq "openjdk8-openj9"} {
     master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk${version}-b${build}_openj9-${openj9_version}/
 
-    checksums    rmd160  32e58360c9a7ceb9db5f79c4f0580c69751ccb06 \
-                 sha256  9ed76d2e4885bc1c7d9c937abaaf3739bddd2cd7c6deca5a46b79e94d62d421e \
-                 size    114341255
+    checksums    rmd160  6db70061a643d19c2bbe41637e085293a94aab7e \
+                 sha256  665dc9c8239b7270b007ab9dd7522570e2686e327d89caf57a6aa6e5c6450078 \
+                 size    114579018
 
     distname     OpenJDK${major}U-jdk_x64_mac_openj9_${version}b${build}_openj9-${openj9_version}
     worksrcdir   jdk${version}-b${build}
@@ -117,11 +197,11 @@ if {${subport} eq "openjdk8"} {
 } elseif {${subport} eq "openjdk8-openj9-large-heap"} {
     master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk${version}-b${build}_openj9-${openj9_version}/
 
-    checksums    rmd160  106ae8c2da187bebc357a4a4674f192acb3af87a \
-                 sha256  3d890c5de3b76928e65f634777fff14b0f141f176ade73ccd8bd52e113347596 \
-                 size    114333605
+    checksums    rmd160  3b319be42f052139b6432b6f89ba667a13aa4e08 \
+                 sha256  e1f8e053899a5d4eba9de8928d4744041b1d127a98959bc9683e4b31868b25cc \
+                 size    114576741
 
-    distname     OpenJDK${major}U-jdk_x64_mac_openj9_macosXL_${version}b${build}-openj9-${openj9_version}
+    distname     OpenJDK${major}U-jdk_x64_mac_openj9_macosXL_${version}b${build}_openj9-${openj9_version}
     worksrcdir   jdk${version}-b${build}
 
     description  Open Java Development Kit ${major} (AdoptOpenJDK) with Eclipse OpenJ9 VM for large heap sizes
@@ -155,21 +235,36 @@ if {${subport} eq "openjdk8"} {
 } elseif {${subport} eq "openjdk11"} {
     master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk-${version}%2B${build}/
 
-    checksums    rmd160  6a45b422bff145fd38eef1e3982b5c0d5352d986 \
-                 sha256  fffd4ed283e5cd443760a8ec8af215c8ca4d33ec5050c24c1277ba64b5b5e81a \
-                 size    189838454
+    checksums    rmd160  a45caba85e458dd5927a34828404574d3da252be \
+                 sha256  b87102274d983bf6bb0aa6c2c623301d0ff5eb7f61043ffd04abb00f962c2dcd \
+                 size    189024328
 
     distname     OpenJDK${major}U-jdk_x64_mac_hotspot_${version}_${build}
     worksrcdir   jdk-${version}+${build}
+} elseif {${subport} eq "openjdk11-graalvm"} {
+    master_sites https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${version}/
+    distname     graalvm-ce-java${major}-darwin-amd64-${version}
+    worksrcdir   graalvm-ce-java${major}-${version}
+
+    checksums    rmd160  d630c59c192d10e31b7d790757c5f2a34129e855 \
+                 sha256  b3ea6cf6545332f667b2cc742bbff9949d47e49eecea06334d14f0b69aa1a3f3 \
+                 size    450067870
+
+    description  GraalVM Community Edition based on OpenJDK ${major}
+    long_description GraalVM is a universal virtual machine for running applications written in JavaScript, Python, \
+                 Ruby, R, JVM-based languages like Java, Scala, Groovy, Kotlin, Clojure, and LLVM-based languages \
+                 such as C and C++.
+
+    homepage     https://www.graalvm.org
 } elseif {${subport} eq "openjdk11-openj9"} {
     master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk-${version}%2B${build}_openj9-${openj9_version}/
 
-    checksums    rmd160  60049469d62bd69540fe5c8902ac9de0ea889317 \
-                 sha256  759c857b6fef2c44baadaa4245182e15c9ad1834cb0361358b13ac1f8fcb2692 \
-                 size    194722988
+    checksums    rmd160  a20f46cf19d34e4b489b5bffb1755d2465fc7cd9 \
+                 sha256  9a5c5b3bb51a82e666c46b2d1bbafa8c2bbc3aae50194858c8f96c5d43a96f64 \
+                 size    196636566
 
-    distname     OpenJDK${major}U-jdk_x64_mac_openj9_${version}_${build}_openj9-${openj9_version}_openj9-${openj9_version}
-    worksrcdir   jdk-${version}+${build}_openj9-${openj9_version}
+    distname     OpenJDK${major}U-jdk_x64_mac_openj9_${version}_${build}_openj9-${openj9_version}
+    worksrcdir   jdk-${version}+${build}
 
     description  Open Java Development Kit ${major} (AdoptOpenJDK) with Eclipse OpenJ9 VM
     long_description AdoptOpenJDK provides prebuilt OpenJDK binaries from a fully \
@@ -181,12 +276,12 @@ if {${subport} eq "openjdk8"} {
 } elseif {${subport} eq "openjdk11-openj9-large-heap"} {
     master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk-${version}%2B${build}_openj9-${openj9_version}/
 
-    checksums    rmd160  eb03ec6d873a35ef673621c6a05b1b800ed030aa \
-                 sha256  1e663b03258a3d30c0b77d745a4e8d30148f159ac15fc791d67bb35b22437d2a \
-                 size    194704380
+    checksums    rmd160  e134ac760608708bab54ac9fdc863cf5a1ccafa2 \
+                 sha256  bb6eec01ebd74a85c178a13d3568d3d657eb48d583d6602627c8237355b801cf \
+                 size    196630490
 
-    distname     OpenJDK${major}U-jdk_x64_mac_openj9_macosXL_${version}_${build}_openj9-${openj9_version}-openj9-${openj9_version}
-    worksrcdir   jdk-${version}+${build}_openj9-${openj9_version}
+    distname     OpenJDK${major}U-jdk_x64_mac_openj9_macosXL_${version}_${build}_openj9-${openj9_version}
+    worksrcdir   jdk-${version}+${build}
 
     description  Open Java Development Kit ${major} (AdoptOpenJDK) with Eclipse OpenJ9 VM for large heap sizes
     long_description AdoptOpenJDK provides prebuilt OpenJDK binaries from a fully \
@@ -197,6 +292,116 @@ if {${subport} eq "openjdk8"} {
                  suitable for running all workloads. \
                  \
                  This version uses non-compressed references and should be used for applications which require heaps that are over ~57 GB.
+} elseif {${subport} eq "openjdk12"} {
+    master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk-${version}%2B${build}/
+    distname     OpenJDK${major}U-jdk_x64_mac_hotspot_${version}_${build}
+
+    checksums    rmd160  298235796f231dcd79baa1eccce40b4eb4aba456 \
+                 sha256  9919eee037554d40c7d2f219bbd654f2bf119e16a2f4d284d8dedaf525ee59e6 \
+                 size    198392994
+
+    worksrcdir   jdk-${version}+${build}
+} elseif {${subport} eq "openjdk12-openj9"} {
+    master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk-${version}%2B${build}_openj9-${openj9_version}/
+    distname     OpenJDK${major}U-jdk_x64_mac_openj9_${version}_${build}_openj9-${openj9_version}
+
+    checksums    rmd160  eb8b931dc23ff3adb998e9c880e027e03b11e7cf \
+                 sha256  20d19ec20f65335edbf4db3861421be393d48720d5a389cd76e1c81a8aff8fee \
+                 size    197951754
+
+    worksrcdir   jdk-${version}+${build}
+
+    description  Open Java Development Kit ${major} (AdoptOpenJDK) with Eclipse OpenJ9 VM
+    long_description AdoptOpenJDK provides prebuilt OpenJDK binaries from a fully \
+                 open-source set of build scripts and infrastructure. \
+                 \
+                 OpenJ9 is the virtual machine from the Eclipse community. It is an enterprise-grade \
+                 VM designed for low memory usage and fast start-up and is used in IBM’s JDK. It is \
+                 suitable for running all workloads.
+} elseif {${subport} eq "openjdk12-openj9-large-heap"} {
+    master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk-${version}%2B${build}_openj9-${openj9_version}/
+    distname     OpenJDK${major}U-jdk_x64_mac_openj9_macosXL_${version}_${build}_openj9-${openj9_version}
+
+    checksums    rmd160  01c7e4723cbee7e8a34e605a369a3986ace9d07a \
+                 sha256  d7c4c75f04f75767e26ffa0083c8a365ec95e8f5ccddcc0005dbd538954064b4 \
+                 size    197960269
+
+    worksrcdir   jdk-${version}+${build}
+
+    description  Open Java Development Kit ${major} (AdoptOpenJDK) with Eclipse OpenJ9 VM for large heap sizes
+    long_description AdoptOpenJDK provides prebuilt OpenJDK binaries from a fully \
+                 open-source set of build scripts and infrastructure. \
+                 \
+                 OpenJ9 is the virtual machine from the Eclipse community. It is an enterprise-grade \
+                 VM designed for low memory usage and fast start-up and is used in IBM’s JDK. It is \
+                 suitable for running all workloads. \
+                 \
+                 This version uses non-compressed references and should be used for applications which require heaps that are over ~57 GB.
+} elseif {${subport} eq "openjdk13"} {
+    master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk-${version}%2B${build}/
+    distname     OpenJDK${major}U-jdk_x64_mac_hotspot_${version}_${build}
+
+    checksums    rmd160  0de593a1b3df57a6a91d9ab3e3d0ee7475bc1e0d \
+                 sha256  0ddb24efdf5aab541898d19b7667b149a1a64a8bd039b708fc58ee0284fa7e07 \
+                 size    198206427
+
+    worksrcdir   jdk-${version}+${build}
+} elseif {${subport} eq "openjdk13-openj9"} {
+    master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk-${version}%2B${build}_openj9-${openj9_version}/
+    distname     OpenJDK${major}U-jdk_x64_mac_openj9_${version}_${build}_openj9-${openj9_version}
+
+    checksums    rmd160  193fc075719f33545f7f9deafebd783b5d7e8df1 \
+                 sha256  dd8d92eec98a3455ec5cd065a0a6672cc1aef280c6a68c507c372ccc1d98fbaa \
+                 size    201152468
+
+    worksrcdir   jdk-${version}+${build}
+
+    description  Open Java Development Kit ${major} (AdoptOpenJDK) with Eclipse OpenJ9 VM
+    long_description AdoptOpenJDK provides prebuilt OpenJDK binaries from a fully \
+                 open-source set of build scripts and infrastructure. \
+                 \
+                 OpenJ9 is the virtual machine from the Eclipse community. It is an enterprise-grade \
+                 VM designed for low memory usage and fast start-up and is used in IBM’s JDK. It is \
+                 suitable for running all workloads.
+} elseif {${subport} eq "openjdk13-openj9-large-heap"} {
+    master_sites https://github.com/AdoptOpenJDK/openjdk${major}-binaries/releases/download/jdk-${version}%2B${build}_openj9-${openj9_version}/
+    distname     OpenJDK${major}U-jdk_x64_mac_openj9_macosXL_${version}_${build}_openj9-${openj9_version}
+
+    checksums    rmd160  7e71c9b1bd5aa8365af66803e3b5292b391e710b \
+                 sha256  a9b7cf11ec9c5df29a09336c91dd7e3232f6fae423e10eec60836330efc2c8cc \
+                 size    201151793
+
+    worksrcdir   jdk-${version}+${build}
+
+    description  Open Java Development Kit ${major} (AdoptOpenJDK) with Eclipse OpenJ9 VM for large heap sizes
+    long_description AdoptOpenJDK provides prebuilt OpenJDK binaries from a fully \
+                 open-source set of build scripts and infrastructure. \
+                 \
+                 OpenJ9 is the virtual machine from the Eclipse community. It is an enterprise-grade \
+                 VM designed for low memory usage and fast start-up and is used in IBM’s JDK. It is \
+                 suitable for running all workloads. \
+                 \
+                 This version uses non-compressed references and should be used for applications which require heaps that are over ~57 GB.
+}
+
+variant Applets \
+    description { Advertise the JVM capability "Applets".} {}
+
+variant BundledApp \
+    description { Advertise the JVM capability "BundledApp". This is required by some java-based app bundles to recognize and use the JVM.} {}
+
+variant JNI \
+    description { Advertise the JVM capability "JNI". This is required by some java-based app bundles to recognize and use the JVM.} {}
+
+variant WebStart \
+    description { Advertise the JVM capability "WebStart".} {}
+
+patch {
+    foreach var { Applets BundledApp JNI WebStart } {
+        if {[variant_isset ${var}]} {
+            reinplace -E "s|^(\[\[:space:\]\]*<string>)CommandLine(</string>)|\\1${var}\\2\\\n\\1CommandLine\\2|" ${worksrcpath}/Contents/Info.plist
+        }
+    }
 }
 
 use_configure    no
@@ -221,9 +426,10 @@ by adding the following line to your Bash shell profile (~/.bash_profile):
     export JAVA_HOME=${target}/Contents/Home
 "
 
-if {${subport} eq "openjdk10"} {
+if {${subport} eq "openjdk10" || [string match openjdk12* ${subport}]} {
     notes-append "
     Warning: Support for OpenJDK ${major} has reached end of life and there will be no more updates.
              Please consider migrating to a supported OpenJDK version.
+             Currently OpenJDK 8, 11 and 13 are supported.
     "
 }

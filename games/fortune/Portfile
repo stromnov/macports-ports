@@ -43,8 +43,7 @@ use_configure       no
 variant universal {}
 
 build.type          bsd
-
-build.env-append    CFLAGS="[get_canonical_archflags]" \
+build.env-append    CFLAGS=[get_canonical_archflags] \
                     CC=${configure.cc}
 
 destroot {

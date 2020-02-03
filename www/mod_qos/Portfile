@@ -3,7 +3,7 @@
 PortSystem          1.0
 
 name                mod_qos
-version             11.62
+version             11.65
 revision            0
 categories          www
 license             Apache-2
@@ -15,9 +15,9 @@ platforms           darwin
 homepage            http://mod-qos.sourceforge.net/index.html
 master_sites        sourceforge:project/mod-qos/
 
-checksums           rmd160  8a96149bb72ea2ac98db99194ef43047acce87c0 \
-                    sha256  9ce8dab2010087e6e70e8c63d613b8a474419a04fc887ab8339dfdf88c330674 \
-                    size    1244039
+checksums           rmd160  b905d489e0988ba42e10cf36c36417f68e343e13 \
+                    sha256  7e78b26340c70c9f6c24ff3d11791137b277b5592a45d423ec6e02e2aaeeb50f \
+                    size    1247087
 
 depends_build       port:autoconf \
                     port:automake
@@ -36,18 +36,8 @@ build.dir           ${configure.dir}
 
 pre-configure { copy ${filespath}/aclocal.m4 ${worksrcpath}/tools }
 
-if {[variant_isset apache22]} {
-    set apxs        ${prefix}/apache22/bin/apxs
-    set mdir        ${destroot}${prefix}/apache22/modules/
-} else {
-    set apxs        ${prefix}/bin/apxs
-    set mdir        ${destroot}${prefix}/lib/apache2/modules/
-}
-
-variant apache22 description "use apache22 instead of apache2" {
-    depends_lib-replace port:apache2 port:apache22
-    destroot.violate_mtree  yes
-}
+set apxs            ${prefix}/bin/apxs
+set mdir            ${destroot}${prefix}/lib/apache2/modules/
 
 post-build {
    system -W ${worksrcpath}/apache2 "${apxs} -c mod_qos.c -lcrypto -lpcre"

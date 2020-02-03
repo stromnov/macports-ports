@@ -1,10 +1,9 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem 1.0
-PortGroup cxx11 1.1
 
 name            squid4
-version         4.6
+version         4.10
 categories      net
 platforms       darwin
 license         GPL-2+
@@ -32,9 +31,9 @@ master_sites    https://mirror.aarnet.edu.au/pub/squid/squid/ \
 
 distname        squid-${version}
 use_xz          yes
-checksums       md5 e25e7cc37754ad14d8aa368c0c210e54 \
-                sha1 0396fe8077049000407d13aca8efdd9228e69d98 \
-                rmd160 36e71fb4f2fedfe626ecd3ef2e2d8f1844163673
+checksums       md5 af7ac6e70f9bd03ae4fcec0c9b99c38a \
+                sha1 b8b267771550bb8c7f2b2968b305118090e7217a \
+                rmd160 33b4f2fb2a428fb37379541eabb1c892fa29ae44
 
 patchfiles      patch-cf.data.pre.diff \
                 patch-compat_types.h.diff \
@@ -50,6 +49,8 @@ depends_build   port:pkgconfig
 depends_lib     port:expat port:zlib
 
 conflicts       squid2 squid3
+
+compiler.cxx_standard   2011
 
 configure.args  --mandir=${prefix}/share/man \
                 --sysconfdir=${prefix}/etc/squid \

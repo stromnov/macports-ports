@@ -3,7 +3,7 @@
 PortSystem          1.0
 
 name                chromedriver
-version             2.44
+version             78.0.3904.70
 categories          www
 platforms           darwin
 maintainers         nomaintainer
@@ -20,13 +20,14 @@ long_description    WebDriver is an open source tool for automated testing of \
 homepage            https://sites.google.com/a/chromium.org/chromedriver/
 master_sites        https://chromedriver.storage.googleapis.com/${version}/
 
-dist_subdir         ${name}/${version}
 distname            ${name}_mac64
+dist_subdir         ${name}/${version}
+
 use_zip             yes
 
-checksums           rmd160  c8359d13c080003c59e555c98de478174f316f70 \
-                    sha256  3fd49c2782a5f93cb48ff2dee021004d9a7fb393798e4c4807b391cedcd30ed9 \
-                    size    6909780
+checksums           rmd160  0be0c41da777153ea7859be8dd0fb33b0d85ceb4 \
+                    sha256  f04501f36af92ab869111137a66c84612e69ec729caa29b25fa4c305614cfe37 \
+                    size    7488025
 
 extract.mkdir       yes
 

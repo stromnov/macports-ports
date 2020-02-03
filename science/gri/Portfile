@@ -4,7 +4,7 @@ PortSystem          1.0
 
 name                gri
 version             2.12.23
-revision            6
+revision            7
 categories          science graphics
 platforms           darwin
 license             GPL-3
@@ -40,7 +40,8 @@ depends_lib         port:readline
 
 patchfiles          patch-doc-gri.texi.diff \
                     patch-doc-texinfo2HTML.diff \
-                    patch-illegal-regex.diff
+                    patch-illegal-regex.diff \
+                    patch-texi_encoding.diff
 
 # makeinfo: rename gri.info failed: No such file or directory
 use_parallel_build  no

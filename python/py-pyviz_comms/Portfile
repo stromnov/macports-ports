@@ -6,7 +6,7 @@ PortGroup           python 1.0
 
 set real_name       pyviz_comms
 name                py-${real_name}
-github.setup        pyviz ${real_name} 0.7.0 v
+github.setup        pyviz ${real_name} 0.7.3 v
 revision            0
 categories          python
 license             BSD
@@ -17,11 +17,11 @@ description         Offers a simple bidirectional communication architecture for
 long_description    ${description}
 platforms           darwin
 
-checksums           rmd160  4b88e8eeb2415e8a41ae280cf74bfdf05e4ab6f6 \
-                    sha256  2148088edb4bf3a0106be49ed4bbb7c712a0f62012011b71e6933ff257634748 \
-                    size    13990
+checksums           rmd160  994e013aeb4cd45b059558ec94704970446007a6 \
+                    sha256  f1f56ddd079e5945b65b23837a3f912f770b4453f650c084db144f298e9d53f6 \
+                    size    16487
 
-python.versions     36 37
+python.versions     36 37 38
 
 if {${name} ne ${subport}} {
     depends_build   port:git
@@ -39,4 +39,8 @@ if {${name} ne ${subport}} {
             ${destroot}${python.prefix}/lib/python${python.branch}/site-packages/pyviz_comms-${version}-py${python.branch}.egg-info/PKG-INFO \
             ${destroot}${python.prefix}/lib/python${python.branch}/site-packages/pyviz_comms/.version
     }
+
+    livecheck.type      none
+} else {
+    github.livecheck.regex  {(\d\.\d+(\.\d+)?(?![ab]))}
 }

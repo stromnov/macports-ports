@@ -1,12 +1,11 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem      1.0
-PortGroup       compiler_blacklist_versions 1.0
 PortGroup       muniversal 1.0
-PortGroup       cxx11 1.1
+PortGroup       compiler_blacklist_versions 1.0
 
 name            gdb
-version         8.2.1
+version         8.3.1
 revision        0
 categories      devel
 license         GPL-3+
@@ -34,9 +33,9 @@ supported_archs x86_64 i386
 
 master_sites    gnu
 
-checksums       rmd160  a92cabfd5da3e358e16aa424a4a3d8de63366614 \
-                sha256  0107985f1edb8dddef6cdd68a4f4e419f5fec0f488cc204f0b7d482c0c6c9282 \
-                size    37601384
+checksums       rmd160  82c6d7d2c96b4716f9f338b116122b7395b07e90 \
+                sha256  26ce655216cd03f4611518a7a1c31d80ec8e884c16715e9ba8b436822e51434b \
+                size    38130999
 
 # these dependencies are listed under depends_lib rather than depends_build
 # because gdb will link with libraries they provide if installed.
@@ -50,8 +49,12 @@ depends_lib     port:boehmgc \
                 port:ncurses \
                 port:zlib
 
-# https://trac.macports.org/ticket/57877
-compiler.blacklist {clang < 801}
+# Older Apple clang versions segfault, c.f., https://trac.macports.org/ticket/56883
+compiler.blacklist      {clang < 601}
+
+# Needs C++11; halfway redundant due to the blacklist above, but make sure selected
+# compiler supports the standard - getting rid of old Apple GCC versions and the like?
+compiler.cxx_standard   2011
 
 configure.args \
     --with-docdir=${prefix}/share/doc \
@@ -76,7 +79,7 @@ post-destroot {
     }
 }
 
-set pythons_suffixes {27 35 36}
+set pythons_suffixes {27 35 36 37}
 
 set pythons_ports {}
 foreach s ${pythons_suffixes} {

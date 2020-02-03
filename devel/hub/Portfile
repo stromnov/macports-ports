@@ -3,7 +3,7 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        github hub 2.10.0 v
+github.setup        github hub 2.14.1 v
 categories          devel
 platforms           darwin
 license             MIT
@@ -16,16 +16,16 @@ long_description    \
 
 homepage            https://hub.github.com/
 
-checksums           rmd160  6774601b6e264ec97d89c2c7f10a117f0ed6e9ad \
-                    sha256  261d6c087bd9b739bb24ad04246f1d35ee807fbb2e34f16fb9a20fad439f8824 \
-                    size    1042725
+checksums           rmd160  82ad33549d5122e4669f29986addca313f2464a8 \
+                    sha256  a2c9dbfac6c25aaf348ad19837536e7cbaf32954d19512c42bdf17cd17a4280f \
+                    size    2077514
 
 worksrcdir          src/github.com/${github.author}/${name}
 
 depends_build-append \
                     port:go port:bash
-build.target
-build.cmd           ./script/build
+build.target        man-pages
+build.cmd           make
 build.env-append    GOPATH=${workpath}
 
 use_configure       no
@@ -40,6 +40,11 @@ post-extract {
 
 destroot {
     xinstall -W ${worksrcpath} bin/hub ${destroot}${prefix}/bin
+    set man-pages ${destroot}${prefix}/share/man/man1
+    xinstall -d ${man-pages}
+    foreach m [glob -directory ${worksrcpath}/share/man/man1 *.1] {
+        xinstall -W ${worksrcpath} ${m} ${man-pages}/
+    }
     set bash-completions ${destroot}${prefix}/share/bash-completion/completions
     xinstall -d ${bash-completions}
     xinstall -W ${worksrcpath} etc/hub.bash_completion.sh ${bash-completions}/hub
@@ -49,13 +54,13 @@ destroot {
 }
 
 notes "
-Using hub feels best when it's aliased as git.  This is not dangerous;
-your normal git commands will all work.  hub merely adds some sugar.
+Using hub feels best when it's aliased as git since
+normal git commands will all work.  hub merely adds some sugar.
 
 hub alias displays instructions for the current shell.
 With the -s flag, it outputs a script suitable for eval.
 
-You should place this command in your .bash_profile or other startup script:
+You could place this command in your shell startup script:
 
 eval \"\$(hub alias -s)\"
 "

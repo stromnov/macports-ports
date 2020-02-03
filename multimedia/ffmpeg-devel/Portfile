@@ -6,11 +6,19 @@ PortGroup           muniversal 1.0
 PortGroup           compiler_blacklist_versions 1.0
 PortGroup           active_variants 1.1
 PortGroup           github 1.0
+# https://trac.macports.org/ticket/59246
+# https://trac.macports.org/ticket/59308
+PortGroup           xcode_workaround 1.0
 
-github.setup        FFmpeg FFmpeg 6174686bc346e24fd146a725a97d77e571ebf5b4
+set git_commit      81172b5e3ac0d3130ff7b639ed7efed5baa1195c
+set git_release     4.2.git
+set git_date        20200102
+
+github.setup        FFmpeg FFmpeg ${git_commit}
 name                ffmpeg-devel
 conflicts           ffmpeg
-version             20190210
+epoch               1
+version             ${git_release}-${git_date}
 license             LGPL-2.1+
 categories          multimedia
 maintainers         {devans @dbevans} {jeremyhu @jeremyhu} openmaintainer
@@ -47,18 +55,15 @@ long_description    FFmpeg is a complete solution to record, convert and \
                     generators for all common audio/video formats.
 
 platforms           darwin
-homepage            http://www.ffmpeg.org/
+homepage            https://www.ffmpeg.org/
 
-checksums           rmd160  b78537299b2bd01222aa753a1f11031cbab8d4f4 \
-                    sha256  ed38026a7f0236ce7ad1f463715096a11ae5bbc5989fc03a8f35579aa20103d7 \
-                    size    12873408
+checksums           rmd160  843819190940ac372dceabe4ad6e74b3112f5998 \
+                    sha256  b8415079c4547d04eaf79c62553fb5ba3833d61ff9be98414cb47b5974852d3d \
+                    size    13251462
 
 depends_build       port:pkgconfig \
                     port:gmake \
                     port:texinfo
-
-# libvpx 1.7.0 now provides a shared library
-# move dependency from depends_build to depends_lib
 
 depends_lib         port:lame \
                     port:libiconv \
@@ -250,7 +255,7 @@ if {[variant_isset universal]} {
     lappend merger_configure_args(x86_64) --enable-x86asm
 } else {
     configure.args-append --arch=${configure.build_arch}
-    configure.env-append  ASFLAGS='[get_canonical_archflags]'
+    configure.env-append  ASFLAGS=[get_canonical_archflags]
     if {${build_arch} eq "i386" || ${build_arch} eq "x86_64"} {
         depends_build-append port:nasm
         configure.args-append --enable-x86asm

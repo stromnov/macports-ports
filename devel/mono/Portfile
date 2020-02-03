@@ -1,11 +1,13 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem              1.0
+PortGroup               legacysupport 1.0
 
 name                    mono
 # please update msbuild when updating mono
-version                 5.18.0.240
+version                 6.8.0.96
 revision                0
+epoch                   1
 categories              devel lang mono
 platforms               darwin
 license                 {GPL-2 LGPL-2 MIT}
@@ -16,25 +18,28 @@ long_description        Mono is an effort to create an open source implementatio
 
 homepage                https://www.mono-project.com/
 master_sites            https://download.mono-project.com/sources/mono/
-use_bzip2               yes
+use_xz                  yes
 universal_variant       no
 
-checksums               rmd160  1636df0001c157e12cc5110e956269302b374f03 \
-                        sha256  143e80eb00519ff496742e78ee07403a3c3629437f3a498eee539de8108da895 \
-                        size    246571697
+checksums               rmd160  404f33928aeb7a129ce6d8c45ca7932beec2d133 \
+                        sha256  ed5df4ec663a4e228e89e910e954fa18d33f72e790c11174e1b62fc8cca90ba0 \
+                        size    245059192
 
 patchfiles-append       patch-aot-compiler.c.diff
 if {!${configure.ccache}} {
     patchfiles-append   patch-no_ccache.diff
 }
 
-depends_build           port:cmake \
+depends_build           path:bin/cmake:cmake \
                         port:ninja \
-                        port:pkgconfig
+                        port:pkgconfig \
+                        bin:perl:perl5 \
+                        port:cctools
 
 depends_lib             port:zlib \
                         port:libiconv \
-                        port:gettext
+                        port:gettext \
+                        port:kerberos5
 
 configure.args          --enable-nls \
                         --enable-dtrace=no \
@@ -43,6 +48,12 @@ configure.args          --enable-nls \
 
 test.run                yes
 test.target             check
+
+compiler.cxx_standard   2011
+
+# avoid conflict with port brotli
+configure.cppflags-delete -I${prefix}/include
+configure.ldflags-delete  -L${prefix}/lib
 
 post-patch {
     if {${os.major} < 9} {
@@ -58,7 +69,7 @@ post-patch {
             ${worksrcpath}/mono/utils/mach-support-x86.c
     }
 
-    # Ensure we are UsingTheRightCompiler (https://trac.macports.org/wiki/UsingTheRightCompiler)
+    # ensure we are UsingTheRightCompiler (https://trac.macports.org/wiki/UsingTheRightCompiler)
     reinplace "s:__MACPORTS_CC__:${configure.cc}:g" \
         ${worksrcpath}/mono/mini/aot-compiler.c
 }
@@ -71,6 +82,5 @@ post-destroot {
         ${destroot}${docdir}
 }
 
-variant unixodbc description {map unixodbc instead of libiodbc to odbc32.dll} {
-    patchfiles-append patch-odbc32.diff
-}
+livecheck.url           https://www.mono-project.com/download/stable/
+livecheck.regex         "Stable \\((\\d+(?:\\.\\d+)+)\\)"

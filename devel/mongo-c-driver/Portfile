@@ -4,10 +4,10 @@ PortSystem          1.0
 PortGroup           cmake 1.1
 PortGroup           github 1.0
 
-github.setup        mongodb mongo-c-driver 1.13.1
-checksums           rmd160  0533697dbc55815f1d95517adb2d16b5188382e7 \
-                    sha256  bb34ff100807e40bdd5bffb46e1b3eaaab23e18895df7d59c73430dc3b82d3a6 \
-                    size    6515044
+github.setup        mongodb mongo-c-driver 1.16.0
+checksums           rmd160  37e92881a8758ff5453a6dcb64dd8fcac8d4041a \
+                    sha256  a4e7ed92e3a2a28640987507b4b9da18c2ed225fe87af00ea9deec839cdd55e0 \
+                    size    7066123
 
 categories          devel
 platforms           darwin
@@ -45,6 +45,9 @@ if {${subport} eq ${name}} {
                     port:snappy \
                     port:zlib
 
+    patchfiles-append \
+                    overlinking.patch
+
     configure.args-append \
                     -DENABLE_BSON=SYSTEM \
                     -DENABLE_ICU=ON \
@@ -79,6 +82,9 @@ subport libbson {
     long_description \
                     ${subport} is a library providing useful routines related \
                     to building, parsing, and iterating BSON documents.
+
+    patchfiles-append \
+                    libbson.patch
 
     configure.args-append \
                     -DENABLE_BSON=ON \

@@ -1,13 +1,15 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           github 1.0
 
-name                ccache
-version             3.6
+github.setup        ccache ccache 3.7.7 v
 revision            0
-checksums           rmd160  9272beb4bdd5c6ed4bf66372c019306eb5a59c29 \
-                    sha256  a6b129576328fcefad00cb72035bc87bc98b6a76aec0f4b59bed76d67a399b1f \
-                    size    340608
+# Use tarball, since the releases archive discourages running ./autogen.sh
+github.tarball_from tarball
+checksums           rmd160  cdf51e58e7194914a8bd28c977db57514aa5dfdc \
+                    sha256  c76c35388a1acb62791454524af82c320a0ff3aa71f4ab4a94121923a8126a70 \
+                    size    386759
 
 categories          devel
 platforms           darwin freebsd
@@ -23,14 +25,26 @@ long_description \
     compilation can be satisfied from cache.  This often results in a 5 to 10 \
     times speedup in common compilations.
 
-homepage            https://ccache.samba.org/
-master_sites        https://www.samba.org/ftp/ccache/
-use_xz              yes
+homepage            https://ccache.dev
+
+# gcc 4.x clang < 500 does not understand -Wpedantic
+pre-configure {
+    reinplace "s|\-Wpedantic||g" ${worksrcpath}/configure.ac
+}
+
+# use_autoconf yes and setting autoconf.cmd to a non-default value will modify
+# depends_build, removing autoconf/automake/libtool. Avoid this by doing it
+# before setting depends_build.
+use_autoconf        yes
+autoconf.cmd        ./autogen.sh
+
+depends_build       port:autoconf \
+                    port:automake \
+                    port:libtool
+
+depends_build-append \
+                    port:asciidoc
 
 depends_lib         port:zlib
 
 conflicts           ccache-devel
-
-livecheck.type      regex
-livecheck.url       [lindex ${master_sites} 0]
-livecheck.regex     ${name}-(\[0-9.\]+)${extract.suffix}

@@ -5,10 +5,10 @@ PortGroup           app 1.0
 PortGroup           active_variants 1.1
 
 name                pspp-devel
-set buildstamp      20190309050001
-set buildhash       g45bf79
-version             1.2.0
-revision            13
+set buildstamp      20191216210502
+set buildhash       g710160
+version             1.3.0
+revision            19
 # depends_test port:p${perl5.major}-text-diff
 categories          math
 license             GPL-3+
@@ -44,9 +44,9 @@ depends_lib-append  path:lib/pkgconfig/cairo.pc:cairo \
 
 depends_build-append    port:pkgconfig
 
-checksums           rmd160  108bedeb945692e933b2f7831b7159c6d6f7901c \
-                    sha256  4c6f767279ab79eb1d29bdb9bb000d3c7eec4c60894c6fde7e1c8d18de8785e2 \
-                    size    7314180
+checksums           rmd160  34d5a328abc2da33fe452c035de9c11ffc99230a \
+                    sha256  d324597accb187c10ddd4a11cd45352838f050a7c93436014bd4ff1660fc84a6 \
+                    size    7387560
 
 post-extract {
     if {[variant_isset gui]} {
@@ -79,6 +79,7 @@ build.target-append  html
 
 test.run            yes
 test.target         check
+#test.env            TESTSUITEFLAGS='-v -k unrepresentable'
 #test.env            TESTSUITEFLAGS='1177 1178 1179 1180 1181 1182 1183 1184 1185 1186'
 
 variant help requires gui description {Provide in-application help via yelp} {

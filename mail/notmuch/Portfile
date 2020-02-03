@@ -1,15 +1,16 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           conflicts_build 1.0
+PortGroup           compiler_blacklist_versions 1.0
+PortGroup           conflicts_build             1.0
 
 name                notmuch
-version             0.28
-revision            1
+version             0.29.3
+revision            0
 categories          mail
 platforms           darwin
 license             GPL-3+
-maintainers         nomaintainer
+maintainers         {seichter.de:macports @rseichter} openmaintainer
 description         The mail indexer
 long_description    \"Not much mail\" is what Notmuch thinks about your email \
                     collection, even if you receive 12000 messages per month or have on the \
@@ -19,16 +20,23 @@ long_description    \"Not much mail\" is what Notmuch thinks about your email \
 
 homepage            https://notmuchmail.org
 master_sites        ${homepage}/releases/
-
-checksums           rmd160  9a413645c3f9cf7e16007d7937a7220492ef2672 \
-                    sha256  acca75cec91651ccd2a7e31f7004e2ae14eff4ae38e375b8a88414c464cd0a37 \
-                    size    921069
+use_xz              yes
+checksums           rmd160  e935fa029a83b9f7019547e6272c68224b04b0b2 \
+                    sha256  d5f704b9a72395e43303de9b1f4d8e14dd27bf3646fdbb374bb3dbb7d150dc35 \
+                    size    660536
 
 depends_build       port:pkgconfig \
                     port:python37 \
-                    port:py37-sphinx
+                    port:py37-sphinx \
+                    port:py37-sphinxcontrib-applehelp \
+                    port:py37-sphinxcontrib-devhelp \
+                    port:py37-sphinxcontrib-htmlhelp \
+                    port:py37-sphinxcontrib-jsmath \
+                    port:py37-sphinxcontrib-qthelp \
+                    port:py37-sphinxcontrib-serializinghtml
 
-depends_lib         port:gmime \
+depends_lib         port:gmime3 \
+                    port:gpgme \
                     port:talloc \
                     port:xapian-core \
                     port:zlib
@@ -41,11 +49,6 @@ post-patch {
 
 conflicts_build     ${name} xcbuild
 
-if {[variant_isset universal]} {
-    # llvm-gcc-4.2: -E, -S, -save-temps and -M options are not allowed with multiple -arch flags
-    compiler.blacklist  *llvm-gcc-4.2
-}
-
 configure.args      --with-docs \
                     --without-emacs \
                     --without-ruby
@@ -54,7 +57,8 @@ configure.python    ${prefix}/bin/python3.7
 
 # Add path to sphinx-build
 configure.env-append \
-                    PATH=${frameworks_dir}/Python.framework/Versions/3.7/bin:$env(PATH)
+                    PATH=${frameworks_dir}/Python.framework/Versions/3.7/bin:$env(PATH) \
+                    TMPDIR=/tmp
 build.env-append    {*}${configure.env}
 destroot.env-append {*}${configure.env}
 

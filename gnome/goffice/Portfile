@@ -19,13 +19,13 @@ use_xz                  yes
 
 if {${name} eq ${subport}} {
     epoch               1
-    version             0.10.44
+    version             0.10.46
 
     license             {GPL-2 GPL-3}
 
-    checksums           rmd160  9c9cafd87ac6bf50636861de10fe3ef27630416c \
-                        sha256  6d6042af92cd962604068dbced5925948af6c812c2138defc3153c204d65a7b9 \
-                        size    2373728
+    checksums           rmd160  3c968f0533722e56ea0b83b92b5a89b9de0bdaeb \
+                        sha256  058d6d3a40e1f60525682ec6b857c441d5deb50d0d30a76804f9f36f865a13a9 \
+                        size    2397976
 
     depends_build       port:pkgconfig \
                         port:intltool \
@@ -72,14 +72,14 @@ if {${name} eq ${subport}} {
     livecheck.type      none
 }
 
-# Snapshot of goffice @0.8.17 for gnucash.
-# Can be removed once gnucash no longer needs this version.
-# No longer required in gnucash unstable 2.7.1 leading to 2.8 series
+# Snapshot of goffice @0.8.17
+# Still used by nip2 (needed until it moves to gtk3):
+# see https://trac.macports.org/ticket/58494#comment:1
 
 subport goffice08 {
     epoch               1
     version             0.8.17
-    revision            4
+    revision            5
 
     checksums           sha256  165070beb67b84580afe80a8a100b674a81d553ab791acd72ac0c655f4fadb15 \
                         rmd160  91d1df371c8164c8c5c9860c7c9c87b9fb69f6c3

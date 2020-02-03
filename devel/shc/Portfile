@@ -3,7 +3,8 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        neurobin shc 4.0.1
+github.setup        neurobin shc 4.0.3
+revision            0
 
 categories          devel
 platforms           darwin
@@ -24,9 +25,19 @@ long_description    SHC is a generic shell script compiler. It takes a script,\
     compiled binary will decrypt and execute the code with the shells' -c \
     option.
 
-checksums           rmd160  6018a8be336e3ce53836c158de10f62c22f62fc5 \
-                    sha256  a1f0b7d1997afb35a728b200a40dbe63c474d807b3f2067a1b50ab5ad7f0fae4 \
-                    size    123529
+checksums           rmd160  e9ec69646a07c68a50e9c25e0d7496cc2716238f \
+                    sha256  a372b0c349f19cb5048499777fc8dd5c67a3c6b8a11da61225ad00bd7cbb6213 \
+                    size    124300
+
+patchfiles          patch-test.diff
+
+test.run            yes
+test.dir            ${worksrcpath}
+test.cmd            ./test/ttest.sh
+test.target
+test.env-append     CC=${configure.cc} \
+                    "CFLAGS=${configure.cflags} [get_canonical_archflags cc]" \
+                    "LDFLAGS=${configure.ldflags} [get_canonical_archflags ld]"
 
 # Do not grab alpha releases
 livecheck.regex     (\[0-9\]+\\.\[0-9\]+\\.\[0-9\]+)${extract.suffix}

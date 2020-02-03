@@ -1,0 +1,54 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           cmake 1.1
+
+name                mbedtls
+version             2.20.0
+revision            1
+set mbedcrypto_version \
+                    3.0.1
+
+categories          devel
+license             Apache-2
+maintainers         {mps @Schamschula} openmaintainer
+description         An open source, portable, easy to use, readable and flexible SSL \
+                    library.
+long_description    {*}${description}
+platforms           darwin
+
+homepage            https://tls.mbed.org
+master_sites        https://github.com/ARMmbed/mbedtls/archive:mbedtls \
+                    https://github.com/ARMmbed/mbed-crypto/archive:mbedcrypto
+
+distfiles           ${name}-${version}${extract.suffix}:mbedtls \
+                    mbedcrypto-${mbedcrypto_version}${extract.suffix}:mbedcrypto
+
+checksums           ${name}-${version}${extract.suffix} \
+                    rmd160  11a432c10a9b2775311448dc3f78ac801e417502 \
+                    sha256  c23e3d19dfb88526ab34e7b90f67665abd851fbce1d50d4adbc213772477581d \
+                    size    1177878 \
+                    mbedcrypto-${mbedcrypto_version}${extract.suffix} \
+                    rmd160  73246e03c8103620c8dbbdeb4c63c9553a998618 \
+                    sha256  ffae368646e7882a82114fdd719b24beae878f4384b701fc3036510b60230de1 \
+                    size    3046792
+
+depends_build-append \
+                    port:perl5 \
+                    port:python38
+
+post-extract {
+    move ${workpath}/${name}-${name}-${version} ${workpath}/${name}-${version}
+    delete ${workpath}/${name}-${version}/crypto
+    move ${workpath}/mbed-crypto-mbedcrypto-${mbedcrypto_version} ${workpath}/${name}-${version}/crypto
+}
+
+configure.args-append \
+                    -DENABLE_TESTING=On \
+                    -DPERL_EXECUTABLE=${prefix}/bin/perl
+
+test.run            yes
+
+livecheck.type      regex
+livecheck.url       https://github.com/ARMmbed/mbedtls/releases
+livecheck.regex     ${name}-(\\d+(?:\\.\\d+)*)

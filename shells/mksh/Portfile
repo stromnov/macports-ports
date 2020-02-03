@@ -37,10 +37,10 @@ build.target
 if {${build.jobs} > 1} {
     build.args-append -j
 }
-build.env           CC="${configure.cc}" \
-                    CFLAGS="${configure.cflags} [get_canonical_archflags cc]" \
-                    CPPFLAGS="${configure.cppflags}" \
-                    LDFLAGS="${configure.ldflags} [get_canonical_archflags ld]"
+build.env           CC=${configure.cc} \
+                    "CFLAGS=${configure.cflags} [get_canonical_archflags cc]" \
+                    CPPFLAGS=${configure.cppflags} \
+                    "LDFLAGS=${configure.ldflags} [get_canonical_archflags ld]"
 
 destroot {
     xinstall -d ${destroot}${prefix}/share/doc/mksh/examples/

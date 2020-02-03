@@ -1,9 +1,10 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           clang_dependency 1.0
 
 name                libidn2
-version             2.1.1
+version             2.3.0
 revision            0
 categories          mail
 license             {LGPL-2.1+ GPL-3+}
@@ -18,9 +19,9 @@ platforms           darwin
 maintainers         {mps @Schamschula} openmaintainer
 master_sites        gnu:libidn
 
-checksums           rmd160  51591c5ab0ff80c30912bb2a5b5facb5a4206615 \
-                    sha256  95416080329298a13269e13175041b530cec3d98b54cafae9424b8dfd22078b1 \
-                    size    2113586
+checksums           rmd160  b14992e57a02ed507f11c8f169370c9c98ea0e08 \
+                    sha256  e1cb1db3d2e249a6a3eb6f0946777c2e892d5c5dc7bd91c74394fc3a01cab8b5 \
+                    size    2164993
 
 depends_build       port:pkgconfig
 

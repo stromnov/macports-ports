@@ -5,7 +5,7 @@ PortGroup           python 1.0
 
 name                py-qdarkstyle
 python.rootname     QDarkStyle
-version             2.6.5
+version             2.7
 revision            0
 categories-append   devel
 platforms           darwin
@@ -24,20 +24,23 @@ homepage            https://github.com/ColinDuquesnoy/QDarkStyleSheet
 master_sites        pypi:[string index ${python.rootname} 0]/${python.rootname}
 distname            ${python.rootname}-${version}
 
-checksums           rmd160  65af77dda7cdcdabfa759c8919693595cecd27ad \
-                    sha256  96b14cd0440a0f73db4e14c5accdaa08072625d0395ae011d444508cbd73eb9e \
-                    size    199161
+checksums           sha256  de7aba62119a839556afd7b3b962588410b6249cbcfcbd56e51e6e827264c38f \
+                    rmd160  3ccddb5ad4c2c7b656cfc8352c5520a5069e3ff2 \
+                    size    1245786
 
-python.versions     27 34 35 36 37
+python.versions     27 35 36 37
 
 if {${name} ne ${subport}} {
     depends_lib-append  port:py${python.version}-setuptools
+
+    depends_lib-append \
+                    port:py${python.version}-helpdev
 
     post-destroot {
         set dest_doc ${destroot}${prefix}/share/doc/${subport}
         xinstall -d ${dest_doc}
         xinstall -m 0644 -W ${worksrcpath} AUTHORS.md CHANGES.md \
-            LICENSE.md PRODUCTION.md README.md ${dest_doc}
+            LICENSE.md CONTRIBUTING.md README.md ${dest_doc}
     }
 
     livecheck.type  none

@@ -4,8 +4,8 @@ PortSystem          1.0
 PortGroup           github 1.0
 
 # UPDATE THESE IN SYNC!
-set version         2019-03-09T00-30-31Z
-set commit          4a130c60a8ab5508abe079a23e24fdfef99c610f 
+set version         2020-01-25T03-02-19Z
+set commit          b70a79e39bbde69d76e557a7c10842e3eb053b47 
 
 set relversion      [regsub {(T..)-(..)-(..Z)} $version {\1:\2:\3}]
 # This is not used for fetching, but is compiled into the executable
@@ -23,9 +23,9 @@ long_description \
 license             Apache-2
 
 checksums \
-    rmd160  c61895300750fc877e1fb77874767292b280f3ce \
-    sha256  8a67b68570f88eb040dfc2fe8964d052c2293252373003d6cd7d96933b0b9adf \
-    size    3057440
+    rmd160  e6d014faaa8ff894a79c57d778704e51c98c432b \
+    sha256  1a224fe431e76fa63746dc24b252bad7ae9090806d8dc57e9d78f36e0d01814d \
+    size    349745
 
 set goproj          github.com/${github.author}/${github.project}
 
@@ -42,8 +42,8 @@ post-extract {
 }
 
 build {
-    system -W ${worksrcpath} "GOPATH=${workpath} \
-      ${prefix}/bin/go build -v -o ${workpath}/${github.project} \
+    system -W ${worksrcpath} "GOPATH=${workpath} GO111MODULE=on CGO_ENABLED=0  \
+      ${prefix}/bin/go build -tags kqueue -v -o ${workpath}/${github.project} \
       -ldflags '-X ${goproj}/cmd.Version=${relversion} \
                 -X ${goproj}/cmd.ReleaseTag=RELEASE.${version} \
                 -X ${goproj}/cmd.CommitID=${commit} \

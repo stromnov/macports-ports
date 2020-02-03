@@ -1,14 +1,13 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
-PortGroup           cmake 1.0
+PortGroup           cmake 1.1
 PortGroup           github 1.0
 PortGroup           muniversal 1.0
 
-# although Volk does not technically require C++11, forcing the use of
-# modern compilers reduces build failures. Also, it will require C++11
-# in the future, so let's just get on the bandwagon early.
-PortGroup           cxx11 1.1
+# Volk requires C/C++11 as of release 2.0.0
+compiler.c_standard   2011
+compiler.cxx_standard 2011
 
 name                volk
 categories          science comms
@@ -20,12 +19,11 @@ platforms           darwin
 
 if {${name} eq ${subport}} {
 
-    github.setup    gnuradio volk 1.4 v
-    revision        1
-    checksums       \
-        rmd160 cf9e7a2a6d981871cc3321135f2f97fa872da94f \
-        sha256 369dffa2ad16c0439f72bdb6d948d91a66cc274388e3bb343e1c19348dcb0ead \
-        size   233428
+    github.setup gnuradio volk 2.1.0 v
+    checksums rmd160 8050edc7d8a0c7633d9dd7523b36ea6d62130c5f \
+              sha256 0934d9f3a0f4b4375826dc291720d52b464da3203f52ff47595a80d731902ce0 \
+              size   274868
+    revision  0
 
     # bump the epoch because I moved the version from 20150707 to 1.0.1
     epoch           1
@@ -33,40 +31,25 @@ if {${name} eq ${subport}} {
 provides the release version, which is typically updated every month or so.
     conflicts       volk-devel
 
-    # fix include_directories ordering so-as to pick up project
-    # headers before external headers. allows for in-place building
-    # while a prior version is already installed.
-    patchfiles-append patch-CMakeLists.txt.diff
-
 }
 
 subport volk-devel {
 
-    github.setup gnuradio volk 285a7e77ffda2d6e64b6d0e13662318e9a7f9be4
-    version      20190307
-    checksums    rmd160 e8fc42546460466f704a41e6551ecec909450f74 \
-                 sha256 707644aa23382229cb4cb2c37940510a59873d7d1b42c596015c8659addd0b43 \
-                 size   252584
-    revision     0
+    github.setup gnuradio volk 001e60a7f33cdc5430892201af88a332b67f5872
+    version   20200108-[string range ${github.version} 0 7]
+    checksums rmd160 34802f54d390c4f11910cdf0244bf20ef8e023fb \
+              sha256 4bb75391fa5ec37e1b12967c3f8dfb2dc905a318a8237f98fb9e867c1c57715a \
+              size   274863
+    revision  0
 
     conflicts       volk
     long_description ${long_description} ${subport} \
 provides the Volk GIT maint or master branch, depending on which is more advanced, and is typically updated every few days to week.
 
-    # temporary patch to revert moving to "modern cmake" targets since
-    # GNU Radio hasn't been updated yet to modern cmake and thus will
-    # not find the updated Volk. remove this patch when GNU Radio has
-    # been updated.
-
-    patchfiles-append patch-revert-modern-cmake.devel.diff
-
 }
 
 # fix naming of *Clang compiler to just "Clang" for internal use
 patchfiles-append patch-fix-clang.diff
-
-# fix C++11 for internal use only
-patchfiles-append patch-fix-cxx11.diff
 patch.pre_args -p1
 
 # override githib PortGroup homepage setting
@@ -76,19 +59,32 @@ homepage            http://libvolk.org/
 depends_build-append port:pkgconfig
 depends_lib-append   port:boost
 
-# do VPATH (out of source tree) build
+# Volk doesn't understand build type "MacPorts"; use release unless +debug is set
 
-cmake.out_of_source yes
+if {[variant_isset debug]} {
+    cmake.build_type Debug
+} else {
+    cmake.build_type Release
+}
+
+# remove use of CPATH, as it is not needed
+
+compiler.cpath
 
 # remove top-level library path, such that internal libraries are used
 # instead of any already-installed ones.
 
 configure.ldflags-delete -L${prefix}/lib
 
+# remove top-level include path, such that internal headers are used
+# instead of any already-installed ones.
+
+configure.cppflags-delete -I${prefix}/include
+
 # specify the Python dependencies; these are checked for at configure,
 # then used for building, but not at runtime.
 
-set pythons_suffixes {27 34 35 36 37}
+set pythons_suffixes {27 35 36 37 38}
 
 set pythons_ports {}
 foreach s ${pythons_suffixes} {
@@ -131,7 +127,7 @@ foreach s ${pythons_suffixes} {
 }
 
 if {![variant_isset debug]} {
-    set selected_python python27
+    set selected_python python37
     foreach s ${pythons_suffixes} {
         if {[variant_isset python${s}]} {
             set selected_python python${s}

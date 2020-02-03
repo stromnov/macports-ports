@@ -1,9 +1,11 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           java 1.0
 
 name                gradle
-version             5.2.1
+version             6.1.1
+revision            0
 categories          devel java groovy
 license             Apache-2
 maintainers         {amake @amake} openmaintainer
@@ -17,17 +19,22 @@ long_description    Gradle is a build system which offers you ease, power and fr
 
 homepage            https://gradle.org/
 platforms           darwin
+supported_archs     noarch
 distname            ${name}-${version}-bin
 master_sites        https://services.gradle.org/distributions
 
-checksums           rmd160  3e67c0ba3f27884538782687134fa756ba76cc1a \
-                    sha256  748c33ff8d216736723be4037085b8dc342c6a0f309081acf682c9803e407357 \
-                    size    87430521
+# Update checksums for variant when updating these!
+checksums           rmd160  db3421914f0ef5f5100538eb590edc20be77e024 \
+                    sha256  9d94e6e4a28ad328072ef6e56bce79a810494ae756751fdcedffdeaf27c093b1 \
+                    size    97472434
 
 worksrcdir          ${name}-${version}
 
 use_zip             yes
 use_configure       no
+
+java.version        1.8+
+java.fallback       openjdk8
 
 build {}
 
@@ -36,7 +43,7 @@ pre-destroot {
     delete {*}[glob ${worksrcpath}/bin/*.bat]
 }
 
-destroot    {
+destroot {
     # Create the target java directory
     xinstall -m 0755 -d ${destroot}${prefix}/share/java/${name}
 
@@ -49,6 +56,24 @@ destroot    {
 
     # Symlink gradle into the bin directory
     ln -s ${prefix}/share/java/${name}/bin/gradle ${destroot}${prefix}/bin
+}
+
+variant all description {Install supplemental documentation and source code} {
+    distname        ${name}-${version}-all
+
+    checksums       rmd160  c260d472095c56d6b888ba2736a6b54034e441ce \
+                    sha256  10065868c78f1207afb3a92176f99a37d753a513dff453abb6b5cceda4058cda \
+                    size    138576146
+
+    post-destroot {
+        xinstall -m 0755 -d ${destroot}${prefix}/share/doc/${name}
+        copy ${worksrcpath}/getting-started.html \
+            ${worksrcpath}/media \
+            ${worksrcpath}/src \
+            ${worksrcpath}/docs \
+            ${worksrcpath}/samples \
+            ${destroot}${prefix}/share/doc/${name}
+    }
 }
 
 livecheck.type  regex

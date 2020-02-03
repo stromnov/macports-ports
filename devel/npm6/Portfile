@@ -3,18 +3,18 @@
 PortSystem          1.0
 
 name                npm6
-version             6.9.0
+version             6.13.7
 categories          devel
 platforms           darwin
 supported_archs     noarch
 license             MIT
-maintainers         {l2dy @l2dy} openmaintainer
+maintainers         {ciserlohn @ci42} openmaintainer
 description         node package manager
 long_description    npm is a package manager for node. \
                     You can use it to install and publish your node programs. \
                     It manages dependencies and does other cool stuff.
 
-conflicts           npm2 npm3 npm4 npm5
+conflicts           npm3 npm4 npm5
 
 homepage            https://www.npmjs.com/
 
@@ -25,10 +25,10 @@ distname            npm-${version}
 extract.suffix      .tgz
 
 # Please keep the sha1 - users can use it to validate sha values published on npmjs.org for the package
-checksums           sha1    5296720486814a64a7fb082de00c4b5cfd11211f \
-                    rmd160  cb019447dc43a7c0680b377a77773eaa8a250ae2 \
-                    sha256  d6194c36bf612f1b2a6fbe351a7cb6f44dfb9a87a1d5336b1303dc1c07e87276 \
-                    size    5175534
+checksums           sha1    9533a3ddc57f9792db8a8b303efabaf878047841 \
+                    rmd160  3546579bea9e59a6bacc22fbfff0d25b5e1e9bad \
+                    sha256  6adf71c198d61a5790cf0e057f4ab72c6ef6c345d72bed8bb7212cb9db969494 \
+                    size    6089032
 
 worksrcdir          "package"
 
@@ -36,7 +36,7 @@ depends_lib         path:bin/node:nodejs10
 
 platform darwin {
     if {${os.major} < 13} {
-        depends_lib-replace path:bin/node:nodejs10 path:bin/node:nodejs6
+        depends_lib-replace path:bin/node:nodejs12 path:bin/node:nodejs8
     }
 }
 
@@ -57,9 +57,6 @@ post-patch {
                    ${worksrcpath}/node_modules/is-ci/bin.js \
                    ${worksrcpath}/node_modules/mkdirp/bin/cmd.js \
                    ${worksrcpath}/node_modules/node-gyp/bin/node-gyp.js \
-                   ${worksrcpath}/node_modules/node-gyp/node_modules/nopt/bin/nopt.js \
-                   ${worksrcpath}/node_modules/node-gyp/node_modules/nopt/examples/my-program.js \
-                   ${worksrcpath}/node_modules/node-gyp/node_modules/semver/bin/semver \
                    ${worksrcpath}/node_modules/nopt/bin/nopt.js \
                    ${worksrcpath}/node_modules/nopt/examples/my-program.js \
                    ${worksrcpath}/node_modules/opener/bin/opener-bin.js \
@@ -72,7 +69,7 @@ post-patch {
                    ${worksrcpath}/node_modules/sshpk/bin/sshpk-verify \
                    ${worksrcpath}/node_modules/uuid/bin/uuid \
                    ${worksrcpath}/node_modules/which/bin/which \
-                   ${worksrcpath}/scripts/index-build.js \
+                   ${worksrcpath}/scripts/docs-build.js \
                    ${worksrcpath}/scripts/maketest \
                    ${worksrcpath}/scripts/relocate.sh] {
         reinplace "s|/usr/bin/env node|${prefix}/bin/node|" ${f}

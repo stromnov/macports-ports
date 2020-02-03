@@ -37,9 +37,8 @@ if {[variant_isset universal]} {
 } else {
     set archflags ${configure.cc_archflags}
 }
-
-build.env           CC="${configure.cc}" \
-                    CFLAGS="${configure.cflags} ${configure.cppflags} ${archflags}" \
-                    LDFLAGS="${configure.ldflags} ${archflags}"
+build.env           CC=${configure.cc} \
+                    "CFLAGS=${configure.cflags} ${configure.cppflags} ${archflags}" \
+                    "LDFLAGS=${configure.ldflags} ${archflags}"
 
 destroot.destdir    prefix=${destroot}${prefix}

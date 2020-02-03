@@ -3,7 +3,7 @@
 PortSystem      1.0
 
 name            gnucash-docs
-version         3.4
+version         3.8
 license         GFDL-1.1+
 categories      gnome x11
 maintainers     {dports @drkp} openmaintainer
@@ -25,17 +25,23 @@ long_description \
 homepage        http://www.gnucash.org/
 master_sites    sourceforge:gnucash
 
-distfiles        ${distname}a${extract.suffix}
-
-checksums       rmd160  2259d740d267aac0f22dc315c329cb08484d0a92 \
-                sha256  07d3b6eff48a305cd392e643d16ac12185bdcd456dcf6061441e9ef9faedf22d \
-                size    92698983
+checksums       rmd160  6aeab6447256c3467d554a642848dfa8f5c1e2ef \
+                sha256  a2504c9a0e66db154dd6498a0019ccf13219c4cb8553fee6ec441cd5209b66a7 \
+                size    71039918
 
 depends_lib     bin:scrollkeeper-config:rarian \
                 port:libxml2 \
                 bin:xsltproc:libxslt
 
-depends_run     bin:yelp:yelp
+variant x11 conflicts quartz {
+    depends_run     bin:yelp:yelp
+}
+variant quartz conflicts x11 {
+    notes-append "The Gnome program documentation reader, yelp, will not currently install with +quartz. Until fixed, please refer to https://www.gnucash.org/docs.phtml for gnucash documentation."
+}
+if {![variant_isset quartz]} {
+    default_variants +x11
+}
 
 supported_archs noarch
 

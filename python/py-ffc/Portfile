@@ -39,11 +39,11 @@ if {${subport} ne ${name}} {
                     port:boost
 
     pre-build {
-        build.env-append CXXFLAGS="${configure.cxxflags}"
+        build.env-append CXXFLAGS=${configure.cxxflags}
     }
 
     pre-destroot {
-        destroot.env-append CXXFLAGS="${configure.cxxflags}"
+        destroot.env-append CXXFLAGS=${configure.cxxflags}
     }
 
     post-fetch {

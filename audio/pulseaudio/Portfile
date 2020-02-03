@@ -8,8 +8,8 @@ PortGroup           active_variants 1.1
 PortGroup           compiler_blacklist_versions 1.0
 
 name                pulseaudio
-version             12.2
-revision            2
+version             13.0
+revision            0
 license             LGPL-2.1+ MIT BSD
 categories          audio
 maintainers         {ionic @Ionic} openmaintainer
@@ -28,9 +28,9 @@ master_sites        https://www.freedesktop.org/software/${name}/releases/
 
 use_xz              yes
 
-checksums           rmd160  04d389135b61c0b2155ac855dbfe532a5c979323 \
-                    sha256  809668ffc296043779c984f53461c2b3987a45b7a25eb2f0a1d11d9f23ba4055 \
-                    size    1665092
+checksums           rmd160  3f55971ab45045dac6270a2a48ccaf900ae0951f \
+                    sha256  961b23ca1acfd28f2bc87414c27bb40e12436efcf2158d29721b1e89f3f28057 \
+                    size    1901768
 
 set perl_branch     5.28
 
@@ -108,7 +108,6 @@ configure.args      --with-mac-version-min=$macosx_deployment_target \
                     --disable-asyncns \
                     --disable-tcpwrap \
                     --disable-lirc \
-                    --disable-bluez4 \
                     --disable-bluez5 \
                     --disable-udev \
                     --disable-hal-compat \

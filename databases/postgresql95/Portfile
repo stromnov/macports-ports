@@ -7,7 +7,7 @@ PortGroup muniversal 1.0
 
 #remember to update the -doc and -server as well
 name			postgresql95
-version			9.5.16
+version			9.5.20
 revision        0
 
 categories		databases
@@ -26,9 +26,9 @@ master_sites		http://ftp3.de.postgresql.org/pub/Mirrors/ftp.postgresql.org/sourc
 			postgresql:source/v${version}/
 distname		postgresql-${version}
 
-checksums           rmd160  7f9c07db733f4b8b61380b9481c2946d06436dd9 \
-                    sha256  a4576c95d4dcee8d4b7835b333d38e909848222e4b87895878bb1c026206e131 \
-                    size    17506874
+checksums           rmd160  768fe33d653ec872033d268bcbc3a6ac2b1cdd4f \
+                    sha256  925751b375cf975bebbe79753fbcb5fe85d7a62abe516d4c56861a6b877dde0d \
+                    size    17610134
 
 use_bzip2		yes
 
@@ -127,9 +127,9 @@ variant python27 conflicts python3 description {add support for python 2.7} {
 }
 
 variant python3 conflicts python27 description {add support for python 3.x} {
-	depends_lib-append		port:python36
+	depends_lib-append		port:python37
 	configure.args-append	--with-python
-	configure.python		${prefix}/bin/python3.6
+	configure.python		${prefix}/bin/python3.7
 }
 
 variant perl description {add Perl support} {

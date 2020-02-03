@@ -3,7 +3,7 @@
 PortSystem          1.0
 
 name                gnome-internet-radio-locator
-version             2.0.0
+version             3.0.0
 set branch          [join [lrange [split $version .] 0 1] .]
 
 categories          gnome
@@ -18,9 +18,9 @@ master_sites        gnome:sources/${name}/${branch}/
 
 use_xz              yes
 
-checksums           rmd160  db3dab8500d806d95753d1a59a0df824e786f3e3 \
-                    sha256  5f07aec583cc80cb7c11372ca815d81e95ce7ddb7c4c85b7be7b82f091bc894b \
-                    size    551328
+checksums           rmd160  81702284088bf149d29a2f6baa4d9fd36d35b708 \
+                    sha256  1a84118e48b5b6cca6f5d409c45e8eba25891811b5a1861390dff7a039e296c6 \
+                    size    561696
 
 depends_build       port:autoconf \
                     port:automake \

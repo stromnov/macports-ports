@@ -5,7 +5,7 @@ PortGroup           kde4   1.1
 
 name                kdelibs4
 version             4.14.3
-revision            13
+revision            14
 categories          kde kde4
 maintainers         {nicos @NicosPavlov}
 license             LGPL-2+ GPL-2+ BSD
@@ -69,7 +69,9 @@ patchfiles           workaround-kdeinit4-crash.patch \
                      patch-cmake-modules-FindKDE4-Internal.cmake.diff \
                      patch-KdePreferences.diff \
                      patch-ui-CMakeLists.diff \
-                     patch-FindExiv2.diff
+                     patch-FindExiv2.diff \
+                     patch-locale.diff \
+                     kdelibs-openssl-1.1.patch
 
 #Deactivated as of ticket #45373
 #                     patch-nativeDialogs.diff
@@ -104,13 +106,6 @@ set startup_root ""
 pre-configure {
     #The FindFlex.cmake file is not working and may conflict with the one provided by cmake (ticket #44119)
     delete file ${worksrcpath}/cmake/modules/FindFlex.cmake
-}
-
-pre-activate {
-    if {![catch {set vers [lindex [registry_active kde4-runtime] 0]}]
-        && [vercmp [lindex $vers 1] 4.8.1] < 0} {
-        registry_deactivate_composite kde4-runtime "" [list ports_nodepcheck 1]
-    }
 }
 
 post-destroot {

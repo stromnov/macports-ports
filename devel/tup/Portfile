@@ -36,8 +36,8 @@ use_configure       no
 
 build.cmd           ./build.sh
 build.env-append    CC=${configure.cc} \
-                    CFLAGS="${configure.cflags} [get_canonical_archflags cc]" \
-                    LDFLAGS="${configure.ldflags} [get_canonical_archflags ld]" \
+                    "CFLAGS=${configure.cflags} [get_canonical_archflags cc]" \
+                    "LDFLAGS=${configure.ldflags} [get_canonical_archflags ld]" \
                     TUP_LABEL=${version}
 
 destroot {

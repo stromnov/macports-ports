@@ -2,22 +2,21 @@
 
 PortSystem          1.0
 PortGroup           cmake 1.1
-PortGroup           cxx11 1.1
 PortGroup           github 1.0
 
-github.setup        googlei18n libphonenumber 8.10.7 v
+github.setup        googlei18n libphonenumber 8.11.1 v
 name                libphonenumber-cpp
 license             Apache-2
 description         Google's C++ library for parsing, formatting, storing \
                     and validating international phone numbers.
-long_description    ${description}
+long_description    {*}${description}
 maintainers         {devans @dbevans} openmaintainer
 categories          devel
 platforms           darwin
 
 set main_distfile   ${distfiles}
 
-set gtest_version   1.8.0
+set gtest_version   1.10.0
 set gtest_distfile  release-${gtest_version}.tar.gz
 set gtest_srcdir    ${workpath}/googletest-release-${gtest_version}/googletest
 set gtest_master    https://github.com/google/googletest/archive
@@ -29,15 +28,15 @@ master_sites        ${github.master_sites}:main \
                     ${gtest_master}:gtest
 
 checksums           ${main_distfile} \
-                    rmd160  8f83e29eb577692b767df0725f4e5c28ebd05e8a \
-                    sha256  db2cebfb51ca732d0c476a9804b1f72cee1c5e84f7ec8446b28a2b63d3021e02 \
-                    size    7273208 \
+                    rmd160  129adb145ac35dd1884f0313dc72429856515c5d \
+                    sha256  83e7a172a71354d8562abb8a0f1adc0bf31797eeb91e611b68131e92acb95b43 \
+                    size    7555490 \
                     ${gtest_distfile} \
-                    rmd160  b0a9e48874df3291a261ed85a0c0a4d677b01dc1 \
-                    sha256  58a6f4277ca2bc8565222b3bbd58a177609e9c488e8a72649359ba51450db7d8 \
-                    size    1281617
+                    rmd160  f2f7f96adf1ab8aae3f6204fdba3ff150fd4396b \
+                    sha256  9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb \
+                    size    904349
 
-worksrcdir          googlei18n-libphonenumber-28b4c65/cpp
+worksrcdir          google-libphonenumber-c3ca621/cpp
 
 patchfiles          patch-cpp-CMakeLists.txt.diff
 
@@ -53,6 +52,7 @@ configure.args-append \
                     -DGTEST_INCLUDE_DIR=${gtest_srcdir}/include
 
 # as of 3.6.0, protobuf3-cpp requires c++11
+compiler.cxx_standard 2011
 configure.cxxflags-append -std=c++11
 
 # force protobuf3-cpp into the no_threadlocal mode on older systems

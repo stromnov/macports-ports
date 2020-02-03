@@ -8,7 +8,7 @@ PortGroup         cxx11 1.1
 name              gnucash
 conflicts         gnucash gnucash-devel
 conflicts-delete  ${subport}
-version           3.4
+version           3.8
 perl5.branches    5.28
 categories        gnome x11
 license           GPL-2+
@@ -33,11 +33,12 @@ master_sites      sourceforge \
 
 use_bzip2         yes
 
-distname          ${name}-${version}
+distname          ${name}-${version}b
 worksrcdir        ${name}-${version}
-checksums           rmd160  d6821fdca0190dc947906c2d35b61c8ac07b8b35 \
-                    sha256  a254883c8f7e34f2e19ebdc6a0185489d9027341d7d62a6f1ef815a8c9e342d7 \
-                    size    13564432
+
+checksums         rmd160  fd31e882dacc6e277d9ef010718c2863f0e2342a \
+                  sha256  0f5eca83d8836a325d9a02c6ed7b4d53e59abcff974e5d90914c9e15d7a87f37 \
+                  size    14285584
 
 post-patch {
     # gnc-fq-dump needs to be patched to use MacPorts perl.
@@ -84,15 +85,6 @@ depends_lib       port:guile \
                   port:libxml2
 
 depends_run       port:gnucash-docs
-# yelp currently requires X11 to build so disable dependency if building
-# with +quartz
-#
-# TODO: add +x11 +quartz variants to distinguish one build from the other
-# since they have different binary dependencies.  Otherwise, rev-upgrade
-# errors may occur
-if {![variant_isset quartz]} {
-    depends_run-append port:yelp
-}
 
 # aqbanking is not universal
 universal_variant no
@@ -113,7 +105,7 @@ post-destroot {
 }
 
 post-activate {
-    system "${prefix}/bin/gtk-update-icon-cache -f -t ${prefix}/share/icons/hicolor"
+    system "${prefix}/bin/gtk-update-icon-cache-3.0 -f -t ${prefix}/share/icons/hicolor"
     system "${prefix}/bin/glib-compile-schemas ${prefix}/share/glib-2.0/schemas"
 }
 

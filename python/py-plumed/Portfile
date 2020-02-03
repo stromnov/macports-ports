@@ -4,7 +4,7 @@ PortSystem          1.0
 PortGroup           python 1.0
 PortGroup           github 1.0
 
-github.setup        plumed plumed2 2.5.0 v
+github.setup        plumed plumed2 2.6.0 v
 name                py-plumed
 categories          python
 
@@ -18,30 +18,35 @@ long_description    ${description} They allow the plumed library to be directly 
 
 homepage            http://www.plumed.org
 
-checksums           rmd160  3873e9d48500bd01353396c0c85723a46b7c0ca9 \
-                    sha256  196aec82920bc6759ac66e32a8673f17e72b6c942bc84aadfd347182c5d9bedf \
-                    size    66557971
+checksums           rmd160  4aacc2e0bc31f94f7432d2be1a75c9fd10c0907d \
+                    sha256  117d15bf8b74268243b615576a19676beb21e3fb2542a131d7ab9768b9502f87 \
+                    size    74671170
 
-python.versions     27 36 37
+python.versions     36 37 38
 
 # python setup is located in python subdir of plumed repository
-worksrcdir ${distname}/python
+worksrcdir  ${distname}/python
 
 if {${name} ne ${subport}} {
 
 # setup the wrappers so that by default they load MacPorts plumed library
-    build.env-append plumed_default_kernel=${prefix}/lib/libplumedKernel.dylib \
-                     plumed_macports=yes
+    build.env-append    plumed_default_kernel=${prefix}/lib/libplumedKernel.dylib \
+                        plumed_macports=yes
 
-    depends_build-append port:py${python.version}-cython
+    depends_build-append    port:py${python.version}-cython \
+                            port:py${python.version}-setuptools
 
-    depends_lib-append   port:py${python.version}-numpy \
-                         path:${prefix}/lib/libplumedKernel.dylib:plumed
+    depends_lib-append      path:${prefix}/lib/libplumedKernel.dylib:plumed
 
-    depends_test-append port:py${python.version}-nose
-    test.cmd            nosetests-${python.branch}
+    depends_test-append     port:py${python.version}-nose \
+                            port:py${python.version}-numpy \
+                            port:py${python.version}-pandas
+
+    test.cmd                nosetests-${python.branch}
+# needed since the module is placed in something like ${worksrcpath}/build/lib.macosx-10.11-x86_64-3.7
+    test.env                PYTHONPATH=[glob -nocomplain ${worksrcpath}/build/lib*]
     test.target
-    test.run            yes
+    test.run                yes
 }
 
 notes "

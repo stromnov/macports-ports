@@ -10,55 +10,39 @@ categories          devel sysutils net
 license             Permissive
 
 description         High-level C++ Binding for 0MQ
-long_description    ${description}
+long_description    {*}${description}
 
-subport cppzmq-devel {}
+# this can be safely removed after 20210118
+subport cppzmq-devel {
+
+    PortGroup   obsolete 1.0
+    version     20200109-bd27f249
+    revision    1
+    replaced_by cppzmq
+
+}
 
 if {${subport} eq ${name}} {
 
     # release
-
-    github.setup    zeromq cppzmq 4.3.0 v
-    checksums       rmd160 2841b8395b290cd895885881864b34e399be7d10 \
-                    sha256 5634462ee21a9dad3baf0db68812a8ac1262353d2039e2af402ff2d356b26ca2 \
-                    size   22897
+    github.setup zeromq cppzmq 4.6.0 v
+    checksums rmd160 357c74d8ab7cd5be4b761d30ca0b283dbc1b1059 \
+              sha256 a26f4f88a814f1652620ded466bf52833c85cd8007558c8950ffee641da13581 \
+              size   35093
+    revision  0
 
     # bump the epoch because I moved the version from 20170720 to 4.2.2
+    epoch     1
 
-    epoch           1
+    depends_lib-append path:lib/libzmq.dylib:zmq
 
-    conflicts       ${name}-devel
-    long_description ${description}: \
-        This port follows the release version of ${name}, which is typically updated every 6 months. If for some reason this port does not build or function as desired, try the ${name}-devel port.
+    # this is just a header; skip all steps and manually do destroot
+    supported_archs noarch
+    use_configure no
+    build {}
 
-} else {
-
-    # devel
-
-    github.setup    zeromq cppzmq bfdc7885b87e0931a561c769b9b1375595cb7abb
-    version         20190204
-    checksums       rmd160 1b908380c4eed4f0079ef1424a97caaf3df5c07e \
-                    sha256 9bd5f2629d4e23ef3edf88ff5fa65f43c81a5df377f4ba06d7372cd1435bed19 \
-                    size   22352
-    revision        0
-
-    conflicts       ${name}
-    long_description ${description}: \
-        This port follows the GIT master version of ${name}, which is typically updated every few days to weeks.
-
-}
-
-depends_lib-append  path:lib/libzmq.dylib:zmq
-
-# this is just a header; skip all steps and manually do destroot
-
-supported_archs     noarch
-
-use_configure no
-
-build {}
-
-destroot {
-    xinstall -m 755 -d ${destroot}${prefix}/include
-    copy ${worksrcpath}/zmq.hpp ${destroot}${prefix}/include
+    destroot {
+        xinstall -m 755 -d ${destroot}${prefix}/include
+        copy ${worksrcpath}/zmq.hpp ${destroot}${prefix}/include
+    }
 }

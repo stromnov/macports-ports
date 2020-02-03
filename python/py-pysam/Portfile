@@ -46,4 +46,11 @@ if {${name} ne ${subport}} {
     livecheck.regex     pysam-(\\d+(\\.\\d+)+)${extract.suffix}
 }
 
-configure.env       HTSLIB_MODE="shared"
+configure.env       HTSLIB_MODE=shared
+
+foreach {old new} {34 36 35 36} {
+    subport py${old}-${python.rootname} "
+        replaced_by py${new}-${python.rootname}
+        PortGroup obsolete 1.0
+    "
+}

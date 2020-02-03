@@ -6,7 +6,8 @@ universal_variant    no
 
 # make sure to keep in sync with mpich
 name                mpi-doc
-version             3.3
+version             3.3.2
+revision            0
 
 license             BSD
 categories          science parallel net
@@ -21,19 +22,19 @@ long_description    ${description}
 master_sites        ${homepage}static/tarballs/${version}/
 distname            mpich-${version}
 
-checksums           rmd160  784a0839217950d861f8695e8ca4138f786cf845 \
-                    sha256  329ee02fe6c3d101b6b30a7b6fb97ddf6e82b28844306771fa9dd8845108fa0b \
-                    size    27209008
+checksums           rmd160  f8392f37058b488b1df90d43b69348662dc71454 \
+                    sha256  4bfaf8837a54771d3e4922c84071ef80ffebddbb6971a006038d91ee7ef959b9 \
+                    size    27311775
 
 use_configure       no
 
 build {}
 
 destroot {
-    delete ${destroot}/${prefix}/share/man/man1
-    delete ${destroot}/${prefix}/share/man/man3
-    move ${worksrcpath}/man/man1 ${destroot}/${prefix}/share/man/
-    move ${worksrcpath}/man/man3 ${destroot}/${prefix}/share/man/
+    delete ${destroot}${prefix}/share/man/man1
+    delete ${destroot}${prefix}/share/man/man3
+    move ${worksrcpath}/man/man1 ${destroot}${prefix}/share/man/
+    move ${worksrcpath}/man/man3 ${destroot}${prefix}/share/man/
 }
 
 livecheck.type      regex

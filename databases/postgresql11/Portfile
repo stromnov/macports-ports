@@ -2,12 +2,13 @@
 
 PortSystem 1.0
 PortGroup select 1.0
+PortGroup compilers 1.0
 PortGroup compiler_blacklist_versions 1.0
 PortGroup muniversal 1.0
 
 #remember to update the -doc and -server as well
 name                postgresql11
-version             11.2
+version             11.6
 revision            0
 
 categories          databases
@@ -26,9 +27,9 @@ master_sites        http://ftp3.de.postgresql.org/pub/Mirrors/ftp.postgresql.org
             postgresql:source/v${version}/
 distname            postgresql-${version}
 
-checksums           rmd160  6b092d1e0695ee14fa1363ce931fa0f179c11b2d \
-                    sha256  2676b9ce09c21978032070b6794696e0aa5a476e3d21d60afc036dc0a9c09405 \
-                    size    19714229
+checksums           rmd160  83a253a51e4d2de8c1752b07b21b9d49b2e987f4 \
+                    sha256  49924f7ff92965fdb20c86e0696f2dc9f8553e1563124ead7beedf8910c13170 \
+                    size    19843202
 
 use_bzip2           yes
 
@@ -67,7 +68,9 @@ configure.ldflags-append    -headerpad_max_install_names
 configure.universal_args-delete --disable-dependency-tracking
 
 # building psql with clang from Xcode prior to 4.4 causes segfault on query; see #31717
-compiler.blacklist-append   {clang < 421}
+compiler.blacklist-append {clang < 421}
+compilers.choose          cc cxx
+compilers.setup           -gcc -fortran -clang33 -clang34 -clang37
 notes "To use the postgresql server, install the ${name}-server port"
 
 if {[variant_isset universal]} {
@@ -146,7 +149,16 @@ variant tcl description {add Tcl support} {
 }
 
 variant llvm description {add support for JIT compilation} {
-    depends_lib-append      port:llvm-6.0
+    set llvm_ver 9.0
+
+    foreach clang ${compilers.clang_variants} {
+        if { [variant_exists ${clang}] && [variant_isset ${clang}] } {
+            set llvm_ver [string index ${clang} end-1].[string index ${clang} end]
+        }
+    }
+
+    depends_lib-append      port:llvm-${llvm_ver}
     configure.args-append   --with-llvm
-    configure.env-append    LLVM_CONFIG=${prefix}/libexec/llvm-6.0/bin/llvm-config
+    configure.env-append    LLVM_CONFIG=${prefix}/libexec/llvm-${llvm_ver}/bin/llvm-config \
+                            CLANG=${configure.cc}
 }

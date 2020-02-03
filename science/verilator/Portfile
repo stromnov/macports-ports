@@ -1,0 +1,31 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem              1.0
+
+name                    verilator
+version                 4.026
+revision                0
+categories              science electronics
+license                 {LGPL-3 Artistic-2}
+maintainers             {mcalhoun @MarcusCalhoun-Lopez} openmaintainer
+platforms               darwin
+description             Verilog compiler and simulator
+long_description        Verilator is a ${description}.
+
+homepage                https://www.veripool.org/wiki/verilator
+
+master_sites            https://www.veripool.org/ftp
+
+extract.suffix          .tgz
+
+checksums               rmd160  6a5caf6a436f7b8273cd5bd76670ebedddc9aaa0 \
+                        sha256  6afb8ab04ab4e29e36f4b4cb04bb2c711e0af11843e41028ee1ea0d31eef9fac \
+                        size    2404465
+
+compiler.cxx_standard   2014
+
+installs_libs           no
+
+livecheck.type          regex
+livecheck.url           https://www.veripool.org/projects/verilator/news
+livecheck.regex         "Verilator (\\d+(?:\\.\\d+)*) Released"

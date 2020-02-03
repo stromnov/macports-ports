@@ -3,11 +3,11 @@
 PortSystem          1.0
 PortGroup           golang 1.0
 
-go.setup            github.com/junegunn/fzf 0.17.5
+go.setup            github.com/junegunn/fzf 0.20.0
 revision            0
-checksums           rmd160  81e89373ec1cd79236a668c0ad453276160c457c \
-                    sha256  3b420dc394dba800b74e93d1b0d0e12c579e209fabb183528254013c3823890d \
-                    size    140397
+checksums           rmd160  eb6237a907f74e94985b687f19123f144c5bb8ae \
+                    sha256  bf3af36005986c1c2b70234a52cf3e7918a13c22ca57a1a517f11ada9f5d555b \
+                    size    152291
 
 categories          sysutils
 platforms           darwin

@@ -35,10 +35,10 @@ use_configure           no
 variant universal {}
 
 build.type              gnu
-build.env               CC="${configure.cc}" \
-                        CFLAGS="${configure.cflags} [get_canonical_archflags cc]" \
-                        CPPFLAGS="${configure.cppflags}" \
-                        LDFLAGS="${configure.ldflags} [get_canonical_archflags ld]"
+build.env               CC=${configure.cc} \
+                        "CFLAGS=${configure.cflags} [get_canonical_archflags cc]" \
+                        CPPFLAGS=${configure.cppflags} \
+                        "LDFLAGS=${configure.ldflags} [get_canonical_archflags ld]"
 
 build.target            darwin9
 destroot.target         install_darwin9

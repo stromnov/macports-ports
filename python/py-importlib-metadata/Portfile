@@ -1,0 +1,41 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem          1.0
+PortGroup           python 1.0
+
+name                py-importlib-metadata
+python.rootname     importlib_metadata
+version             1.5.0
+revision            0
+categories-append   devel
+platforms           darwin
+license             Apache
+
+python.versions     27 35 36 37 38
+
+maintainers         {stromnov @stromnov} openmaintainer
+
+description         Library to access the metadata for a Python package.
+long_description    ${description}
+
+homepage            http://importlib-metadata.readthedocs.io/
+
+checksums           rmd160  e785528c04bbd208293f6983c2427ca169e5144d \
+                    sha256  06f5b3a99029c7134207dd882428a66992a9de2bef7c2b699b5641f9886c3302 \
+                    size    26738
+
+if {${name} ne ${subport}} {
+    depends_build-append \
+                        port:py${python.version}-setuptools_scm
+
+    depends_lib-append  port:py${python.version}-zipp
+
+    if {${python.version} eq 27} {
+        depends_lib-append \
+                        port:py${python.version}-pathlib2 \
+                        port:py${python.version}-contextlib2 \
+                        port:py${python.version}-configparser
+    }
+
+    livecheck.type      none
+}

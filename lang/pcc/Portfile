@@ -37,8 +37,7 @@ if {${subport} eq ${name}} {
     patchfiles-append   patch-typo.diff \
                         patch-string.diff \
                         patch-no_empty.diff
-
-    configure.env       YACC="${prefix}/bin/bison -y"
+    configure.env       "YACC=${prefix}/bin/bison -y"
 }
 
 configure.args-append --host=${build_arch}-apple-${os.platform}${os.major}.0.0
